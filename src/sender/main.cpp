@@ -1,8 +1,19 @@
 #include <QCoreApplication>
+#include "WebsocketClient.h"
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    if(argc == 1){
+        qWarning("need one argument");
+        return EXIT_FAILURE;
+    }else if(argc != 2){
+        qWarning("need only one argument");
+        return EXIT_FAILURE;
+    }
 
-    return a.exec();
+    auto client = createWebsocketClient("sender");
+    client.sendMessage(QString::fromStdString(std::string(argv[1])));
+
+    return EXIT_SUCCESS;
 }
