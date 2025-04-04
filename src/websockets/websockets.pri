@@ -6,9 +6,13 @@ DEPENDPATH += $$PWD
 SOURCES += \
     $$PWD/ClientConfig.cpp \
     $$PWD/Common.cpp \
-    $$PWD/WebsocketClient.cpp
+    $$PWD/ServerConfig.cpp \
+    $$PWD/WebsocketClient.cpp \
+    $$PWD/WebsocketServer.cpp
 
 HEADERS += \
     $$PWD/ClientConfig.h \
     $$PWD/Common.h \
-    $$PWD/WebsocketClient.h
+    $$PWD/ServerConfig.h \
+    $$PWD/WebsocketClient.h \
+    $$PWD/WebsocketServer.h

@@ -6,14 +6,28 @@
 #include <QPointer>
 
 class WebsocketClient
+    : public QObject
 {
+    Q_OBJECT
 public:
-    WebsocketClient();
+    explicit WebsocketClient(QObject* parent = nullptr);
     virtual ~WebsocketClient();
 
     void setKey(const QString& key);
 
-    void setRole(const QString& role);
+    enum class Role
+    {
+        Sender,
+        Proxy,
+        Agent,
+    };
+
+    static std::map<Role, QString> role_to_str;
+    static std::map<QString, Role> generateStrToRole();
+    static QString roleToStr(const Role role);
+    static Role strToRole(const QString& role);
+
+    void setRole(const Role role);
 
     void setUrl(const QUrl& server);
 
@@ -22,11 +36,11 @@ public:
 signals:
 
 protected:
-    QString mRole;
-    QString mKey;
-    QPointer<QWebSocket> mSocket;
+    Role m_role;
+    QString m_key;
+    QPointer<QWebSocket> m_socket;
 };
 
-WebsocketClient createWebsocketClient(const QString& role);
+WebsocketClient* createWebsocketClient(const WebsocketClient::Role role);
 
 #endif // WEBSOCKETCLIENT_H

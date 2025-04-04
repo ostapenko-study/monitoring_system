@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    auto client = createWebsocketClient("sender");
-    client.sendMessage(QString::fromStdString(std::string(argv[1])));
+    auto client = createWebsocketClient(WebsocketClient::Role::Sender);
+    client->sendMessage(QString::fromStdString(std::string(argv[1])));
 
     return EXIT_SUCCESS;
 }
