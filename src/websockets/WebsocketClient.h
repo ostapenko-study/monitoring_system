@@ -34,7 +34,7 @@ public:
     void sendMessage(const QString& msg);
 
 signals:
-
+    void received(QString message);
 protected:
     Role m_role;
     QString m_key;

@@ -13,6 +13,9 @@ WebsocketClient::WebsocketClient(QObject* parent)
     : QObject(parent)
 {
     m_socket = new QWebSocket;
+
+    connect(m_socket, &QWebSocket::textMessageReceived,
+            this, &WebsocketClient::received);
 }
 
 WebsocketClient::~WebsocketClient()
@@ -68,20 +71,12 @@ void WebsocketClient::sendMessage(const QString &msg)
     if(m_socket->state() == QAbstractSocket::SocketState::ConnectedState)
     {
         QJsonObject pkg;
-        pkg.insert("key", m_key);
+        pkg.insert("from", m_key);
         pkg.insert("role", roleToStr(m_role));
         pkg.insert("data", msg);
 
-        qint64 len = m_socket->sendTextMessage(QJsonDocument(pkg).toJson(QJsonDocument::Compact));
+        websocket::sendTextMessage(m_socket, json::toString(pkg));
 
-        m_socket->flush();
-
-        if(len != msg.size())
-        {
-            qWarning() << "Error while sending data via socket!";
-        }else{
-            qInfo() <<  "sended" << msg;
-        }
     }
     else
     {

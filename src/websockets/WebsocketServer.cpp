@@ -3,6 +3,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include "WebsocketClient.h"
+#include "Common.h"
 
 WebsocketServer::WebsocketServer(const ServerConfig& config, QObject *parent)
     : QObject(parent)
@@ -16,6 +17,25 @@ WebsocketServer::WebsocketServer(const ServerConfig& config, QObject *parent)
         connect(m_server, &QWebSocketServer::closed,
                 this, &WebsocketServer::onClosed);
     }
+}
+
+void WebsocketServer::sendMessage(const QString &message, const QString &key)
+{
+    if(!m_key_to_socket.count(key))
+    {
+        qWarning() << "try to send message \"" << message << "\"to socket with key" << key;
+        return;
+    }
+
+    const auto socket = m_key_to_socket.at(key);
+
+    if(!socket)
+    {
+        qWarning() << "socket with key" << key << "isn't alive";
+        return;
+    }
+
+    websocket::sendTextMessage(socket, message);
 }
 
 void WebsocketServer::onNewConnection()
@@ -32,7 +52,7 @@ void WebsocketServer::processTextMessage(QString message)
 {
     auto client = qobject_cast<QWebSocket* >(sender());
 
-    const auto obj = QJsonDocument::fromJson(message.toUtf8()).object();
+    const auto obj = json::parseStr(message);
 
     const auto client_key = obj.value("key").toString();
     if(client_key.isEmpty())

@@ -1,6 +1,8 @@
 #include "Common.h"
+#include "qjsonobject.h"
 #include <QFile>
 #include <QDebug>
+#include <QWebSocket>
 
 QByteArray file::read(const QString &filename)
 {
@@ -31,4 +33,30 @@ QJsonDocument file::toJson(const QByteArray &data)
 QString generator::machineId()
 {
     return QString(file::read("/etc/machine-id"));
+}
+
+bool websocket::sendTextMessage(QWebSocket *socket, const QString &message)
+{
+    qint64 len = socket->sendTextMessage(message);
+
+    socket->flush();
+
+    if(len != message.size())
+    {
+        qWarning() << "Error while sending data via socket!";
+        return false;
+    }else{
+        qInfo() <<  "sended" << socket->localAddress() << socket->localPort() << "message:"<< message;
+        return true;
+    }
+}
+
+QString json::toString(const QJsonObject &obj)
+{
+    return QString(QJsonDocument(obj).toJson(QJsonDocument::Compact));
+}
+
+QJsonObject json::parseStr(const QString &msg)
+{
+    return QJsonDocument::fromJson(msg.toUtf8()).object();
 }
