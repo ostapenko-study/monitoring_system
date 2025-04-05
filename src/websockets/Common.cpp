@@ -19,15 +19,15 @@ QByteArray file::read(const QString &filename)
     return data;
 }
 
-QJsonDocument file::toJson(const QByteArray &data)
+void file::write(const QString &filename, const QString &data)
 {
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
-    if(jsonDoc.isNull())
-    {
-        qWarning() << "Failed to parse JSON";
-        throw std::logic_error("failed to parse JSON");
+    QFile file(filename);
+    if (file.open(QIODevice::WriteOnly)) {
+        QTextStream stream(&file);
+        stream << data;
     }
-    return jsonDoc;
+    file.flush();
+    file.close();
 }
 
 QString generator::machineId()
@@ -49,6 +49,17 @@ bool websocket::sendTextMessage(QWebSocket *socket, const QString &message)
         qInfo() <<  "sended" << socket->localAddress() << socket->localPort() << "message:"<< message;
         return true;
     }
+}
+
+QJsonDocument json::toJson(const QByteArray &data)
+{
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+    if(jsonDoc.isNull())
+    {
+        qWarning() << "Failed to parse JSON";
+        throw std::logic_error("failed to parse JSON");
+    }
+    return jsonDoc;
 }
 
 QString json::toString(const QJsonObject &obj)

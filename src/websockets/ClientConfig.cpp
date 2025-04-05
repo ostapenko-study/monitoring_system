@@ -7,7 +7,7 @@ ClientConfig ClientConfig::generateFromFile(const QString &config_filename)
     ClientConfig answer;
 
     const auto config_object =
-        file::toJson(
+        json::toJson(
             file::read(
                 config_filename
             )

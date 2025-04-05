@@ -1,5 +1,4 @@
-#ifndef COMMON_H
-#define COMMON_H
+#pragma once
 
 #include <QString>
 #include <QJsonDocument>
@@ -14,7 +13,7 @@ type* get##name() const {return m##name;}
 namespace file
 {
     QByteArray read(const QString &filename);
-    QJsonDocument toJson(const QByteArray& data);
+    void write(const QString &filename, const QString &data);
 }
 
 namespace generator
@@ -31,7 +30,8 @@ namespace websocket
 
 namespace json
 {
+    QJsonDocument toJson(const QByteArray& data);
     QString toString(const QJsonObject& obj);
     QJsonObject parseStr(const QString& msg);
 }
-#endif // COMMON_H
+
