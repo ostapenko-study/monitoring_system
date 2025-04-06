@@ -13,8 +13,13 @@ ServerConfig ServerConfig::generateFromFile(const QString &config_filename)
                 )
             ).object();
 
-    answer.server_name = config_object.value("server_name").toString(generator::machineId());
+    answer.server_name = config_object.value("server_name").toString();
     answer.port = config_object.value("port").toInt();
 
     return answer;
+}
+
+QString ServerConfig::serverName() const
+{
+    return generator::machineId() + "; " + server_name;
 }

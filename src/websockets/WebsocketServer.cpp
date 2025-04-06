@@ -7,7 +7,7 @@
 
 WebsocketServer::WebsocketServer(const ServerConfig& config, QObject *parent)
     : QObject(parent)
-    , m_server(new QWebSocketServer(config.server_name,
+    , m_server(new QWebSocketServer(config.serverName(),
                                    QWebSocketServer::NonSecureMode, this))
 {
     if(m_server->listen(QHostAddress::Any, config.port))

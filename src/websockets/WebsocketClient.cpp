@@ -92,7 +92,7 @@ WebsocketClient* createWebsocketClient(const WebsocketClient::Role role)
 
     client->setRole(role);
 
-    client->setKey(generator::machineId());
+    client->setKey(config.clientKey());
 
     client->setUrl(config.url());
 

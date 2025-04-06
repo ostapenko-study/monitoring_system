@@ -15,6 +15,7 @@ ClientConfig ClientConfig::generateFromFile(const QString &config_filename)
 
     answer.server_ip = config_object.value("server_ip").toString();
     answer.server_port = config_object.value("server_port").toInt();
+    answer.client_key = config_object.value("client_key").toString();
 
     return answer;
 }
@@ -26,4 +27,9 @@ QUrl ClientConfig::url() const
                 .arg(server_ip)
                 .arg(server_port)
         );
+}
+
+QString ClientConfig::clientKey() const
+{
+    return generator::machineId() + "; " + client_key;
 }

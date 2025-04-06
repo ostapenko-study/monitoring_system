@@ -10,6 +10,7 @@ struct ServerConfig
 
     static ServerConfig generateFromFile(const QString& config_filename = "./server.conf");
 
+    QString serverName() const;
 
 };
 
