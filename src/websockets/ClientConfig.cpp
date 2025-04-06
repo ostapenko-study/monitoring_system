@@ -1,6 +1,6 @@
 #include "ClientConfig.h"
 #include <QJsonObject>
-#include "Common.h"
+#include "websockets_common.h"
 
 ClientConfig ClientConfig::generateFromFile(const QString &config_filename)
 {

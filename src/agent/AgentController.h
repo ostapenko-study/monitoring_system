@@ -16,6 +16,9 @@ public:
 signals:
 
 protected:
+    void onWorkerCreatedMessage(QJsonObject obj);
+    void onClientReceivedMessage(QString str);
+
     WebsocketClient* m_client;
     AgentWorker* m_worker;
 };

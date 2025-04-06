@@ -3,7 +3,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include "WebsocketClient.h"
-#include "Common.h"
+#include "websockets_common.h"
 
 WebsocketServer::WebsocketServer(const ServerConfig& config, QObject *parent)
     : QObject(parent)

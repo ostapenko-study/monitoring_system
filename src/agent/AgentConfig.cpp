@@ -1,6 +1,6 @@
 #include "AgentConfig.h"
 #include <QJsonArray>
-#include "Common.h"
+#include "websockets_common.h"
 
 const QString AgentConfig::default_config_filename = "./agent.conf";
 

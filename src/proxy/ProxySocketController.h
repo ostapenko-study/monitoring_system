@@ -4,7 +4,7 @@
 #include <QObject>
 #include "WebsocketClient.h"
 #include "WebsocketServer.h"
-#include "Common.h"
+#include "websockets_common.h"
 
 class ProxySocketController : public QObject
 {

@@ -1,6 +1,6 @@
 #include "WebsocketClient.h"
 #include "ClientConfig.h"
-#include "Common.h"
+#include "websockets_common.h"
 #include <QJsonObject>
 
 std::map<WebsocketClient::Role, QString> WebsocketClient::role_to_str = {
