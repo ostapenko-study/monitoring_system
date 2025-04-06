@@ -9,7 +9,6 @@ CONFIG += c++17 cmdline
 include(../websockets/websockets.pri)
 
 SOURCES += \
-        AgentConfig.cpp \
         AgentController.cpp \
         AgentWorker.cpp \
         common.cpp \
@@ -27,7 +26,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    AgentConfig.h \
     AgentController.h \
     AgentWorker.h \
     common.h \

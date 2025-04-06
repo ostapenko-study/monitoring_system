@@ -4,6 +4,7 @@ INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
 SOURCES += \
+    $$PWD/AgentConfig.cpp \
     $$PWD/ClientConfig.cpp \
     $$PWD/ServerConfig.cpp \
     $$PWD/WebsocketClient.cpp \
@@ -11,6 +12,7 @@ SOURCES += \
     $$PWD/websockets_common.cpp
 
 HEADERS += \
+    $$PWD/AgentConfig.h \
     $$PWD/ClientConfig.h \
     $$PWD/ServerConfig.h \
     $$PWD/WebsocketClient.h \
