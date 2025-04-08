@@ -18,7 +18,8 @@ SOURCES += \
         stat/ProcessMemStat.cpp \
         stat/StatToJson.cpp \
         stat/SystemCpuStat.cpp \
-        stat/SystemMemInfo.cpp
+        stat/SystemMemInfo.cpp \
+        stat/TopStat.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -34,4 +35,5 @@ HEADERS += \
     stat/ProcessMemStat.h \
     stat/StatToJson.h \
     stat/SystemCpuStat.h \
-    stat/SystemMemInfo.h
+    stat/SystemMemInfo.h \
+    stat/TopStat.h

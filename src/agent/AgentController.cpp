@@ -1,6 +1,13 @@
 #include "AgentController.h"
 #include "websockets_common.h"
 
+#include "stat/TopStat.h"
+
+const QMap<QString, AgentController::HandlerFunc> AgentController::m_command_to_implement = {
+    {"set_config", &AgentController::setConfigRequest},
+    {"get_top", &AgentController::getTopRequest},
+};
+
 AgentController::AgentController(QObject *parent)
     : QObject{parent}
 {
@@ -12,6 +19,8 @@ AgentController::AgentController(QObject *parent)
 
     connect(m_client, &WebsocketClient::received,
             this, &AgentController::onClientReceivedMessage);
+
+
 }
 
 void AgentController::init()
@@ -21,10 +30,45 @@ void AgentController::init()
 
 void AgentController::onWorkerCreatedMessage(QJsonObject obj)
 {
+    obj.insert("index", "monitoring_package_by_timer");
     m_client->sendMessage(json::toString(obj));
 }
 
 void AgentController::onClientReceivedMessage(QString text)
 {
+    QJsonObject obj = json::parseStr(text);
 
+    auto answer = processMessage(obj);
+
+    answer["index"] = obj.value("index");
+
+    m_client->sendMessage(json::toString(answer));
+}
+
+QJsonObject AgentController::processMessage(QJsonObject data)
+{
+    const auto command = data.value("command").toString();
+
+    if(!m_command_to_implement.contains(command))
+    {
+        return json::generateError("command not find");
+    }
+
+    auto func = m_command_to_implement[command];
+    return (this->*func)(data.value("data").toObject());
+}
+
+QJsonObject AgentController::setConfigRequest(const QJsonObject &data)
+{
+    m_worker->setConfig(AgentConfig::createFromJson(data));
+    m_worker->start();
+    return json::resultOk;
+}
+
+QJsonObject AgentController::getTopRequest(const QJsonObject& )
+{
+    const auto stats = getProcessTopInfos();
+    QJsonObject answer;
+    answer["top"] = json::containerToJson(stats.begin(), stats.end());
+    return json::generateResult(answer);
 }

@@ -19,6 +19,16 @@ protected:
     void onWorkerCreatedMessage(QJsonObject obj);
     void onClientReceivedMessage(QString str);
 
+    QJsonObject processMessage(QJsonObject data);
+
+    QJsonObject setConfigRequest(const QJsonObject& data);
+    QJsonObject getTopRequest(const QJsonObject& );
+
+
+    using HandlerFunc = QJsonObject (AgentController::*)(const QJsonObject&);
+    static const QMap<QString, HandlerFunc> m_command_to_implement;
+
+
     WebsocketClient* m_client;
     AgentWorker* m_worker;
 };

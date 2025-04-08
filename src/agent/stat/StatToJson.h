@@ -5,8 +5,10 @@
 
 QJsonObject generateSystemStat();
 QJsonObject generateProcessStat(const long pid);
-QJsonArray generateProcessStat(std::vector<long> pids);
+QJsonArray generateProcessStat(const std::vector<long>& pids);
 
+QJsonArray generateProcessStatByUsers(const std::vector<std::string>& users);
+QJsonArray generateProcessStatByNames(const std::vector<std::string>& names);
 
 
 #endif // STATTOJSON_H

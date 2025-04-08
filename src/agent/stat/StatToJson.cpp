@@ -6,6 +6,8 @@
 #include "SystemCpuStat.h"
 #include "SystemMemInfo.h"
 
+#include "process/PID_generator.h"
+
 QJsonObject generateSystemStat()
 {
     QJsonObject answer;
@@ -108,7 +110,7 @@ QJsonObject generateProcessStat(const long pid)
 }
 
 
-QJsonArray generateProcessStat(std::vector<long> pids)
+QJsonArray generateProcessStat(const std::vector<long> &pids)
 {
     QJsonArray pid_arr;
     for(auto pid : pids){
@@ -116,4 +118,32 @@ QJsonArray generateProcessStat(std::vector<long> pids)
     }
 
     return pid_arr;
+}
+
+QJsonArray generateProcessStatByUsers(const std::vector<std::string> &users)
+{
+    QJsonArray arr;
+    for(const auto& user: users){
+        QJsonObject obj;
+
+        obj.insert("user", QString::fromStdString(user));
+        obj.insert("pids", generateProcessStat(pid_generator::findByUserName(user)));
+
+        arr.append(obj);
+    }
+    return arr;
+}
+
+QJsonArray generateProcessStatByNames(const std::vector<std::string> &names)
+{
+    QJsonArray arr;
+    for(const auto& process: names){
+        QJsonObject obj;
+
+        obj.insert("process", QString::fromStdString(process));
+        obj.insert("pids", generateProcessStat(pid_generator::findByProcessName(process)));
+
+        arr.append(obj);
+    }
+    return arr;
 }
