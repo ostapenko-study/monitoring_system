@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WEBSOCKET_COMMON_H
+#define WEBSOCKET_COMMON_H
 
 #include <QString>
 #include <QJsonDocument>
@@ -49,20 +50,12 @@ namespace json
     }
 
 
-    QJsonObject generateError(const QString& text_error)
-    {
-        QJsonObject answer;
-        answer.insert("isOk", false);
-        answer.insert("error", text_error);
-        return answer;
-    }
+    QJsonObject generateError(const QString& text_error);
 
-    QJsonObject generateResult(QJsonObject obj)
-    {
-        obj["isOk"] = true;
-        return obj;
-    }
+    QJsonObject generateResult(QJsonObject obj);
 
     const QJsonObject resultOk = generateResult({});
 }
 
+
+#endif // WEBSOCKET_COMMON_H

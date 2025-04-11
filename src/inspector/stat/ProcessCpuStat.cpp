@@ -1,7 +1,7 @@
 #include "ProcessCpuStat.h"
 #include <iostream>
 #include <fstream>
-#include "../common.h"
+#include "inspector_common.h"
 
 ProcessCpuStat ProcessCpuStat::createFromProcProcessStatLine(const std::string &line)
 {
@@ -9,8 +9,7 @@ ProcessCpuStat ProcessCpuStat::createFromProcProcessStatLine(const std::string &
 
     ProcessCpuStat answer;
 
-    int i = 0;
-
+    size_t i = 0;
     answer.pid = GET_SPLIITED_INT(i); ++i;
     answer.name = splitted.at(i); ++i;
     answer.state = GET_SPLIITED_INT(i); ++i;

@@ -1,4 +1,4 @@
-#include "common.h"
+#include "inspector_common.h"
 
 std::vector<std::string> split(std::string s, const std::string &delimiter) {
     std::vector<std::string> tokens;

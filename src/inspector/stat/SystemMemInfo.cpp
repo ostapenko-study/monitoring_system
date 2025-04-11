@@ -1,18 +1,18 @@
-#include "ProcessMemStat.h"
+#include "SystemMemInfo.h"
 #include <fstream>
 #include <iostream>
-#include "../common.h"
+#include "inspector_common.h"
 
-ProcessMemStat ProcessMemStat::getProcessMemStat(long pid)
+SystemMemInfo SystemMemInfo::getSystemMemInfo()
 {
-    ProcessMemStat answer;
+    SystemMemInfo answer;
 
-    std::ifstream file("/proc/" + std::to_string(pid) + "/status");
+    std::ifstream file("/proc/meminfo");
 
     std::string line;
 
     while(std::getline(file, line)){
-        auto splitted = split(line, std::string("\t"));
+        auto splitted = split(line, std::string(" "));
         if(splitted.size() < 2){
             std::cerr << "loggic_error";
             continue;
@@ -26,7 +26,7 @@ ProcessMemStat ProcessMemStat::getProcessMemStat(long pid)
     return answer;
 }
 
-void ProcessMemStat::print() const
+void SystemMemInfo::print()
 {
     for(const auto& p  : data){
         std::cout << p.first << ": " << p.second << "\n";

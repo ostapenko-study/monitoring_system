@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include "../common.h"
+#include "inspector_common.h"
 
 SystemCpuStat SystemCpuStat::createFromProcStatLine(const std::string &line)
 {
@@ -11,7 +11,7 @@ SystemCpuStat SystemCpuStat::createFromProcStatLine(const std::string &line)
     SystemCpuStat result;
     result.name = splitted[0];
 
-    int i = 1;
+    size_t i = 1;
     result.user = GET_SPLIITED_INT(i); ++i;
     result.nice = GET_SPLIITED_INT(i); ++i;
     result.system = GET_SPLIITED_INT(i); ++i;

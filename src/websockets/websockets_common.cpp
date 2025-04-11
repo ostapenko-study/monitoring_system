@@ -71,3 +71,17 @@ QJsonObject json::parseStr(const QString &msg)
 {
     return QJsonDocument::fromJson(msg.toUtf8()).object();
 }
+
+QJsonObject json::generateError(const QString &text_error)
+{
+    QJsonObject answer;
+    answer.insert("isOk", false);
+    answer.insert("error", text_error);
+    return answer;
+}
+
+QJsonObject json::generateResult(QJsonObject obj)
+{
+    obj["isOk"] = true;
+    return obj;
+}
