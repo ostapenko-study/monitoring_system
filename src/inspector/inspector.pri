@@ -3,6 +3,7 @@ DEPENDPATH += $$PWD
 
 SOURCES += \
     $$PWD/inspector_common.cpp \
+    $$PWD/network/network_scanner.cpp \
     $$PWD/process/PID_generator.cpp \
     $$PWD/stat/ProcessCpuStat.cpp \
     $$PWD/stat/ProcessMemStat.cpp \
@@ -13,6 +14,7 @@ SOURCES += \
 
 HEADERS += \
     $$PWD/inspector_common.h \
+    $$PWD/network/network_scanner.h \
     $$PWD/process/PID_generator.h \
     $$PWD/stat/ProcessCpuStat.h \
     $$PWD/stat/ProcessMemStat.h \
