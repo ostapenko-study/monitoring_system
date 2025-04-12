@@ -2,6 +2,7 @@
 #define NETWORK_SCANNER_H
 
 #include "qhostaddress.h"
+#include <QPair>
 #include <vector>
 #include <string>
 
@@ -12,6 +13,8 @@ bool ping_host(const std::string& host);
 QList<QHostAddress> get_docker_container_ips();
 
 QList<QHostAddress> scan_network(QHostAddress base_ip, QHostAddress mask);
+
+QJsonArray hostAddressListToJsonArray(const QList<QHostAddress> &addresses);
 
 QHostAddress get_network_address(const QHostAddress& ip, const QHostAddress& netmask);
 
@@ -25,11 +28,22 @@ struct InterfaceInfo {
 
     QString toString() const;
 
+    QJsonObject toJson() const;
+
     QList<QHostAddress> scan() const;
 };
 
 
 QList<InterfaceInfo> get_interfaces();
+
+struct Interfaces
+{
+    QList<QPair<InterfaceInfo, QList<QHostAddress>>> data;
+
+    QJsonArray toJson() const;
+};
+
+Interfaces get_full_interfaces();
 
 }
 

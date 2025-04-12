@@ -1,4 +1,5 @@
 #include "network_scanner.h"
+#include "qjsonobject.h"
 #include <future>
 #include <QDebug>
 #include <ifaddrs.h>
@@ -11,6 +12,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <iostream>
+#include <QJsonArray>
 
 bool network_scanner::ping_host(const std::string &host) {
     std::string cmd = "ping -c 1 -W 1 " + host + " > /dev/null 2>&1";
@@ -68,6 +70,15 @@ QString network_scanner::InterfaceInfo::toString() const {
         .arg(ip.toString())
         .arg(netmask.toString())
         .arg(mac.isEmpty() ? "невідомий" : mac);
+}
+
+QJsonObject network_scanner::InterfaceInfo::toJson() const {
+    QJsonObject obj;
+    obj["name"] = name;
+    obj["ip"] = ip.toString();
+    obj["netmask"] = netmask.toString();
+    obj["mac"] = mac;
+    return obj;
 }
 
 QList<QHostAddress> network_scanner::InterfaceInfo::scan() const
@@ -181,4 +192,45 @@ QList<QHostAddress> network_scanner::get_docker_container_ips() {
     }
 
     return ips;
+}
+
+network_scanner::Interfaces network_scanner::get_full_interfaces()
+{
+    Interfaces answer;
+
+    const auto interfaces = network_scanner::get_interfaces();
+    for (const auto& interface : interfaces) {
+        if(
+            interface.name == "lo"
+            ||
+            interface.name.startsWith("br-") //linux system networks-bridge (for docker for example)
+        ){
+            answer.data.push_back({interface, {}});
+        }else{
+            answer.data.push_back({interface, interface.scan()});
+        }
+    }
+
+    return answer;
+}
+
+QJsonArray network_scanner::Interfaces::toJson() const
+{
+    QJsonArray answer;
+
+    for(auto it = data.begin(); it != data.end(); ++it){
+        QJsonObject obj = it->first.toJson();
+        obj["addresses"] = hostAddressListToJsonArray(it->second);
+        answer.push_back(obj);
+    }
+
+    return answer;
+}
+
+QJsonArray network_scanner::hostAddressListToJsonArray(const QList<QHostAddress> &addresses) {
+    QJsonArray jsonArray;
+    for (const QHostAddress &address : addresses) {
+        jsonArray.append(address.toString());
+    }
+    return jsonArray;
 }

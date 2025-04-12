@@ -1,11 +1,12 @@
 #include "AgentController.h"
+#include "network/network_scanner.h"
 #include "websockets_common.h"
-
 #include "stat/TopStat.h"
 
 const QMap<QString, AgentController::HandlerFunc> AgentController::m_command_to_implement = {
     {"set_config", &AgentController::setConfigRequest},
     {"get_top", &AgentController::getTopRequest},
+    {"get_scan", &AgentController::getScanRequest},
 };
 
 AgentController::AgentController(QObject *parent)
@@ -19,7 +20,6 @@ AgentController::AgentController(QObject *parent)
 
     connect(m_client, &WebsocketClient::received,
             this, &AgentController::onClientReceivedMessage);
-
 
 }
 
@@ -71,4 +71,12 @@ QJsonObject AgentController::getTopRequest(const QJsonObject& )
     QJsonObject answer;
     answer["top"] = json::containerToJson(stats.begin(), stats.end());
     return json::generateResult(answer);
+}
+
+QJsonObject AgentController::getScanRequest(const QJsonObject &)
+{
+    QJsonObject answer;
+    answer["interfaces"] = network_scanner::get_full_interfaces().toJson();
+    return json::generateResult(answer);
+
 }

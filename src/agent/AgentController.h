@@ -23,6 +23,7 @@ protected:
 
     QJsonObject setConfigRequest(const QJsonObject& data);
     QJsonObject getTopRequest(const QJsonObject& );
+    QJsonObject getScanRequest(const QJsonObject& );
 
 
     using HandlerFunc = QJsonObject (AgentController::*)(const QJsonObject&);
