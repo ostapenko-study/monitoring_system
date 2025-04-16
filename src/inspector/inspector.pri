@@ -5,6 +5,7 @@ SOURCES += \
     $$PWD/inspector_common.cpp \
     $$PWD/network/network_scanner.cpp \
     $$PWD/process/PID_generator.cpp \
+    $$PWD/ssh_config.cpp \
     $$PWD/stat/ProcessCpuStat.cpp \
     $$PWD/stat/ProcessMemStat.cpp \
     $$PWD/stat/StatToJson.cpp \
@@ -13,6 +14,7 @@ SOURCES += \
     $$PWD/stat/TopStat.cpp
 
 HEADERS += \
+    $$PWD/ssh_config.h \
     $$PWD/inspector_common.h \
     $$PWD/network/network_scanner.h \
     $$PWD/process/PID_generator.h \

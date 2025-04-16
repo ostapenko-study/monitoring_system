@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QJsonObject>
+#include "ssh_config.h"
 
 
 struct ProcessTopInfo{
@@ -26,5 +27,7 @@ struct ProcessTopInfo{
 };
 
 QVector<ProcessTopInfo> getProcessTopInfos();
+QVector<ProcessTopInfo> getProcessTopInfosBySsh(const SshCredentials& ssh_credentials);
+QVector<ProcessTopInfo> parseTopOutput(const QString& output);
 
 #endif // TOPSTAT_H
