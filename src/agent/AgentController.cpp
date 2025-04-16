@@ -1,7 +1,7 @@
 #include "AgentController.h"
 #include "network/network_scanner.h"
 #include "websockets_common.h"
-#include "stat/TopStat.h"
+#include "stat/MainStat.h"
 
 const QMap<QString, AgentController::HandlerFunc> AgentController::m_command_to_implement = {
     {"set_config", &AgentController::setConfigRequest},
