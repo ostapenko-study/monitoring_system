@@ -1,7 +1,6 @@
 #include "AgentController.h"
-#include "network/network_scanner.h"
+#include "CommandHandler.h"
 #include "websockets_common.h"
-#include "stat/MainStat.h"
 
 const QMap<QString, AgentController::HandlerFunc> AgentController::m_command_to_implement = {
     {"set_config", &AgentController::setConfigRequest},
@@ -62,21 +61,16 @@ QJsonObject AgentController::setConfigRequest(const QJsonObject &data)
 {
     m_worker->setConfig(AgentConfig::createFromJson(data));
     m_worker->start();
-    return json::resultOk;
+    auto answer = QJsonObject{};
+    return json::generateResult(command_handler::appendIndex(answer, data));
 }
 
-QJsonObject AgentController::getTopRequest(const QJsonObject& )
+QJsonObject AgentController::getTopRequest(const QJsonObject& data)
 {
-    const auto stats = getProcessTopInfos();
-    QJsonObject answer;
-    answer["top"] = json::containerToJson(stats.begin(), stats.end());
-    return json::generateResult(answer);
+    return json::generateResult(command_handler::getTopRequest(data));
 }
 
-QJsonObject AgentController::getScanRequest(const QJsonObject &)
+QJsonObject AgentController::getScanRequest(const QJsonObject & data)
 {
-    QJsonObject answer;
-    answer["interfaces"] = network_scanner::get_full_interfaces().toJson();
-    return json::generateResult(answer);
-
+    return json::generateResult(command_handler::getScanNetworkRequest(data));
 }

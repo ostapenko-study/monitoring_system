@@ -2,6 +2,7 @@ INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
 SOURCES += \
+    $$PWD/CommandHandler.cpp \
     $$PWD/inspector_common.cpp \
     $$PWD/network/network_scanner.cpp \
     $$PWD/process/PID_generator.cpp \
@@ -14,6 +15,7 @@ SOURCES += \
     $$PWD/stat/SystemMemInfo.cpp
 
 HEADERS += \
+    $$PWD/CommandHandler.h \
     $$PWD/ssh_config.h \
     $$PWD/inspector_common.h \
     $$PWD/network/network_scanner.h \

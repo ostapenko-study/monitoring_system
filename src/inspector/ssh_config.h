@@ -2,6 +2,7 @@
 
 #include <QString>
 #include <vector>
+#include <QJsonObject>
 
 struct SshCredentials
 {
@@ -10,8 +11,12 @@ struct SshCredentials
     QString ip;
 
     QString host() const;
+
+    static SshCredentials fromJson(const QJsonObject &obj);
 };
 
 QString run_ssh(const SshCredentials& credentials, const QString& command);
-
 std::string run_ssh_with_password(const std::string& userHost, const std::string& password, const std::vector<std::string>& remoteCommand);
+
+QString run_sсp_from_local_to_remote(const SshCredentials& credentials, const std::string &source, const std::string &destination);
+std::string run_scp_with_password(const std::string &source, const std::string &destination, const std::string &password);
