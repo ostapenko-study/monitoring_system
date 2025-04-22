@@ -20,3 +20,5 @@ std::string run_ssh_with_password(const std::string& userHost, const std::string
 
 QString run_sсp_from_local_to_remote(const SshCredentials& credentials, const std::string &source, const std::string &destination);
 std::string run_scp_with_password(const std::string &source, const std::string &destination, const std::string &password);
+
+void run_local_bash_command(const QString &command);

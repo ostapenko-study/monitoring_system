@@ -1,6 +1,8 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
+include(../websockets/websockets.pri)
+
 SOURCES += \
     $$PWD/CommandHandler.cpp \
     $$PWD/inspector_common.cpp \

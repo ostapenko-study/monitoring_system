@@ -187,3 +187,21 @@ QString run_sсp_from_local_to_remote(const SshCredentials &credentials, const s
         run_scp_with_password(source, credentials.host().toStdString() + ":" + destination, credentials.password.toStdString())
     );
 }
+
+#include <QProcess>
+
+void run_local_bash_command(const QString &command) {
+    QProcess process;
+
+    // Start a shell and run the command
+    process.start("/bin/bash", QStringList() << "-c" << command);
+    process.waitForFinished();
+
+    // Read output
+    QString output = process.readAllStandardOutput();
+    QString errorOutput = process.readAllStandardError();
+
+    qDebug() << "Output:" << output;
+    if (!errorOutput.isEmpty())
+        qDebug() << "Errors:" << errorOutput;
+}

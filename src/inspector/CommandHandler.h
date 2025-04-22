@@ -14,7 +14,7 @@ QJsonObject getScanNetworkRequest(const QJsonObject& );
 
 QJsonObject getTopRequestBySsh(const QJsonObject& );
 
-QJsonObject setupDeviceBySsh(const QJsonObject& );
+QJsonObject setupDeviceBySsh(const QJsonObject& , int port);
 
 }
 

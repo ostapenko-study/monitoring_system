@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QUrl>
+#include <QJsonObject>
 
 struct ClientConfig
 {
@@ -11,7 +12,12 @@ struct ClientConfig
     QString server_ip;
     int server_port;
 
-    static ClientConfig generateFromFile(const QString& config_filename = "./client.conf");
+    QJsonObject toJson() const;
+
+    static const QString default_config_file;
+
+    static ClientConfig fromJson(const QJsonObject& obj);
+    static ClientConfig generateFromFile(const QString& config_filename = default_config_file);
 
     QUrl url() const;
 

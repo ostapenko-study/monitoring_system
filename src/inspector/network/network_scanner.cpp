@@ -90,6 +90,27 @@ QList<QHostAddress> network_scanner::InterfaceInfo::scan() const
     return scan_network(get_network_address(ip, netmask), netmask);
 }
 
+bool network_scanner::InterfaceInfo::containsHost(const QString &hostStr) const {
+    QHostAddress hostAddr(hostStr);
+    if (hostAddr.protocol() != ip.protocol()) {
+        return false; // IPv4 vs IPv6 mismatch
+    }
+
+    // Convert addresses to quint32 (only works for IPv4)
+    if (ip.protocol() == QAbstractSocket::IPv4Protocol) {
+        quint32 ipInt = ip.toIPv4Address();
+        quint32 netmaskInt = netmask.toIPv4Address();
+        quint32 networkBase = ipInt & netmaskInt;
+        quint32 hostInt = hostAddr.toIPv4Address();
+        quint32 hostNetworkBase = hostInt & netmaskInt;
+
+        return networkBase == hostNetworkBase;
+    }
+
+    // Optional: add IPv6 handling here if потрібно
+    return false;
+}
+
 int network_scanner::get_available_hosts(QHostAddress netmask) {
     // Перетворюємо маску підмережі в uint32_t
     uint32_t netmask_uint = netmask.toIPv4Address();
@@ -233,4 +254,16 @@ QJsonArray network_scanner::hostAddressListToJsonArray(const QList<QHostAddress>
         jsonArray.append(address.toString());
     }
     return jsonArray;
+}
+
+std::optional<network_scanner::InterfaceInfo> network_scanner::find_interface_by_ip(const QString &ip)
+{
+    auto interfaces = network_scanner::get_interfaces();
+    foreach (const auto& interface, interfaces) {
+        if(interface.containsHost(ip)){
+            return interface;
+        }
+    }
+
+    return std::nullopt;
 }

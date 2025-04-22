@@ -1,7 +1,9 @@
 #include "CommandHandler.h"
+#include "ClientConfig.h"
 #include "network/network_scanner.h"
 #include "websockets_common.h"
 #include "stat/MainStat.h"
+#include "inspector_common.h"
 
 namespace command_handler
 {
@@ -36,9 +38,56 @@ QJsonObject getTopRequestBySsh(const QJsonObject & data)
     return json::generateResult(appendIndex(answer, data));
 }
 
-QJsonObject setupDeviceBySsh(const QJsonObject& data)
-{
+namespace{
 
+QString generateSshBackgroundCommand(QString app_name){
+    return "sh -c \'nohup " + app_name + " > /dev/null 2>&1 < /dev/null &\'";
+}
+
+}
+
+QJsonObject setupDeviceBySsh(const QJsonObject& data, int port)
+{
+    static const auto apps = {"agent", "proxy"};
+
+    auto ssh_credentials = SshCredentials::fromJson(data);
+    const auto interface = network_scanner::find_interface_by_ip(ssh_credentials.ip);
+
+    if(!interface.has_value())
+    {
+        return json::generateError("don't find network interface");
+    }
+
+    static const QString tmp_dir = "~/.monitoring_system_tmp/";
+    static const QString remote_dir = "~/.monitoring_system/";
+
+    if(!ensureDirectoryExists(tmp_dir))
+    {
+        return json::generateError("don't find tmp folder");
+    }
+
+    for(const auto& app : apps){
+        run_local_bash_command(QString("cp ./") + app + tmp_dir);
+    }
+
+    ClientConfig config;
+    config.server_ip = interface->ip.toString();
+    config.server_port = port;
+    config.client_key = data.value("name_id").toString();
+
+    file::write(tmp_dir + ClientConfig::default_config_file, json::toString(config.toJson()));
+
+    auto responce = run_sсp_from_local_to_remote(ssh_credentials, "-r " + tmp_dir.toStdString(), remote_dir.toStdString());
+
+    //check responce
+
+    for(const auto& app : apps){
+        if(data.value(app).toBool()){
+            run_ssh(ssh_credentials, generateSshBackgroundCommand(remote_dir + app));
+        }
+    }
+
+    return json::generateResult({});
 }
 
 }

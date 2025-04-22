@@ -1,4 +1,5 @@
 #include "inspector_common.h"
+#include <QDir>
 
 std::vector<std::string> split(std::string s, const std::string &delimiter) {
     std::vector<std::string> tokens;
@@ -15,4 +16,17 @@ std::vector<std::string> split(std::string s, const std::string &delimiter) {
     tokens.push_back(s);
 
     return tokens;
+}
+
+bool ensureDirectoryExists(const QString &path) {
+    QDir dir(path);
+    if (!dir.exists()) {
+        if (dir.mkpath(".")) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return true;
+    }
 }

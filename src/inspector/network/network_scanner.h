@@ -31,10 +31,13 @@ struct InterfaceInfo {
     QJsonObject toJson() const;
 
     QList<QHostAddress> scan() const;
+
+    bool containsHost(const QString& hostStr) const; //gpt
 };
 
 
 QList<InterfaceInfo> get_interfaces();
+std::optional<InterfaceInfo> find_interface_by_ip(const QString& ip);
 
 struct Interfaces
 {

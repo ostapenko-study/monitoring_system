@@ -12,3 +12,7 @@
 //https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
 std::vector<std::string> split(std::string s, const std::string& delimiter);
 
+#include <QString>
+
+bool ensureDirectoryExists(const QString &path);
+
