@@ -3,4 +3,5 @@ TEMPLATE = subdirs
 SUBDIRS += \
     agent \
     proxy \
-    sender
+    sender \
+    server
