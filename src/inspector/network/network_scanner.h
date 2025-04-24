@@ -5,6 +5,7 @@
 #include <QPair>
 #include <vector>
 #include <string>
+#include <optional>
 
 namespace network_scanner
 {

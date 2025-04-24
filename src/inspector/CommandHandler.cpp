@@ -1,5 +1,7 @@
 #include "CommandHandler.h"
 #include "ClientConfig.h"
+#include "WebsocketClient.h"
+#include "WebsocketServer.h"
 #include "network/network_scanner.h"
 #include "websockets_common.h"
 #include "stat/MainStat.h"
@@ -70,12 +72,31 @@ QJsonObject setupDeviceBySsh(const QJsonObject& data, int port)
         run_local_bash_command(QString("cp ./") + app + tmp_dir);
     }
 
-    ClientConfig config;
-    config.server_ip = interface->ip.toString();
-    config.server_port = port;
-    config.client_key = data.value("name_id").toString();
+    {
+        ClientConfig config;
+        config.server_ip = interface->ip.toString();
+        config.server_port = port;
+        config.client_key = data.value("name_id").toString();
 
-    file::write(tmp_dir + ClientConfig::default_config_file, json::toString(config.toJson()));
+        for(auto role : {
+                 WebsocketClient::Role::Agent,
+                 WebsocketClient::Role::Proxy,
+                 WebsocketClient::Role::Sender,
+             }){
+            file::write(tmp_dir + getClientWebsocketConfigFileNameByRole(role), json::toString(config.toJson()));
+        }
+    }
+
+    {
+        ServerConfig config;
+        config.server_name = data.value("name_id").toString();
+        config.port = 18000;
+        for(auto role : {
+                 WebsocketServer::Role::Proxy,
+             }){
+            file::write(tmp_dir + getServerWebsocketConfigFileNameByRole(role), json::toString(config.toJson()));
+        }
+    }
 
     auto responce = run_sсp_from_local_to_remote(ssh_credentials, "-r " + tmp_dir.toStdString(), remote_dir.toStdString());
 

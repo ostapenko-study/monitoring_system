@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 
     auto proxy_socket_constoller = new ProxySocketController();
 
-    auto server = createWebsocketServer();
+    auto server = createWebsocketServer(WebsocketServer::Role::Proxy);
     auto client = createWebsocketClient(WebsocketClient::Role::Proxy);
 
     proxy_socket_constoller->setServer(server);

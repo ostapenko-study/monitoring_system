@@ -19,6 +19,16 @@ ServerConfig ServerConfig::generateFromFile(const QString &config_filename)
     return answer;
 }
 
+QJsonObject ServerConfig::toJson() const
+{
+    QJsonObject answer;
+
+    answer["server_name"] = server_name;
+    answer["port"] = port;
+
+    return answer;
+}
+
 QString ServerConfig::serverName() const
 {
     return generator::machineId() + "; " + server_name;

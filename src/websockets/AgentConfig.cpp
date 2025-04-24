@@ -2,6 +2,7 @@
 #include <QJsonArray>
 #include "websockets_common.h"
 
+
 const QString AgentConfig::default_config_filename = "./agent.conf";
 
 AgentConfig AgentConfig::createFromJson(const QJsonObject & obj)

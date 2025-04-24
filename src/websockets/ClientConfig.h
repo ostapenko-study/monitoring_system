@@ -14,10 +14,8 @@ struct ClientConfig
 
     QJsonObject toJson() const;
 
-    static const QString default_config_file;
-
     static ClientConfig fromJson(const QJsonObject& obj);
-    static ClientConfig generateFromFile(const QString& config_filename = default_config_file);
+    static ClientConfig generateFromFile(const QString& config_filename);
 
     QUrl url() const;
 

@@ -15,8 +15,18 @@ public:
     explicit WebsocketServer(const ServerConfig& model, QObject* parent = nullptr);
 
     void sendMessage(const QString& message, const QString& key);
+    void sendMessageToAll(const QString& message);
+
+    enum class Role
+    {
+        Proxy,
+        ServerSystem,
+        ServerView,
+    };
+
+    int port() const;
 signals:
-    void received(QJsonObject pkg);
+    void received(QJsonObject pkg, QString socket_key);
     void disconnected(QString socket_key);
     void closed();
 protected:
@@ -35,7 +45,8 @@ protected:
     std::map<QWebSocket*, QString> m_socket_to_key;
 };
 
+QString getServerWebsocketConfigFileNameByRole(const WebsocketServer::Role role);
 
-WebsocketServer* createWebsocketServer();
+WebsocketServer* createWebsocketServer(const WebsocketServer::Role role);
 
 #endif // WEBSOCKETSERVER_H

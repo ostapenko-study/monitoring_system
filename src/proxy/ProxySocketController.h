@@ -22,6 +22,16 @@ signals:
 protected:
     void onServerReceivedMessage(QJsonObject message);
     void onClientReceivedMessage(QString message);
+    QJsonObject processMessage(QJsonObject data);
+
+    QJsonObject getTopBySshRequest(const QJsonObject& );
+    QJsonObject getScanRequest(const QJsonObject& );
+    QJsonObject setupDeviceBySshRequest(const QJsonObject& );
+
+
+    using HandlerFunc = QJsonObject (ProxySocketController::*)(const QJsonObject&);
+    static const QMap<QString, HandlerFunc> m_command_to_implement;
+
 };
 
 #endif // PROXYSOCKETCONTROLLER_H

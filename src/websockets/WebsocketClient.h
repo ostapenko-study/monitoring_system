@@ -20,6 +20,7 @@ public:
         Sender,
         Proxy,
         Agent,
+        Server,
     };
 
     static std::map<Role, QString> role_to_str;
@@ -40,6 +41,8 @@ protected:
     QString m_key;
     QPointer<QWebSocket> m_socket;
 };
+
+QString getClientWebsocketConfigFileNameByRole(const WebsocketClient::Role role);
 
 WebsocketClient* createWebsocketClient(const WebsocketClient::Role role);
 

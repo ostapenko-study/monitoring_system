@@ -84,9 +84,21 @@ void WebsocketClient::sendMessage(const QString &msg)
     }
 }
 
+QString getClientWebsocketConfigFileNameByRole(const WebsocketClient::Role role)
+{
+    static const std::map<WebsocketClient::Role, QString> __data = {
+        {WebsocketClient::Role::Agent, "agent_websocket_client.conf"},
+        {WebsocketClient::Role::Proxy, "proxy_websocket_client.conf"},
+        {WebsocketClient::Role::Sender, "sender_websocket_client.conf"},
+        {WebsocketClient::Role::Server, "server_websocket_client.conf"},
+    };
+
+    return __data.at(role);
+}
+
 WebsocketClient* createWebsocketClient(const WebsocketClient::Role role)
 {
-    const auto config = ClientConfig::generateFromFile();
+    const auto config = ClientConfig::generateFromFile(getClientWebsocketConfigFileNameByRole(role));
 
     auto client = new WebsocketClient;
 
@@ -98,3 +110,4 @@ WebsocketClient* createWebsocketClient(const WebsocketClient::Role role)
 
     return client;
 }
+

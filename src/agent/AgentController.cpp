@@ -5,7 +5,6 @@
 const QMap<QString, AgentController::HandlerFunc> AgentController::m_command_to_implement = {
     {"set_config", &AgentController::setConfigRequest},
     {"get_top", &AgentController::getTopRequest},
-    {"get_scan", &AgentController::getScanRequest},
 };
 
 AgentController::AgentController(QObject *parent)
@@ -68,9 +67,4 @@ QJsonObject AgentController::setConfigRequest(const QJsonObject &data)
 QJsonObject AgentController::getTopRequest(const QJsonObject& data)
 {
     return json::generateResult(command_handler::getTopRequest(data));
-}
-
-QJsonObject AgentController::getScanRequest(const QJsonObject & data)
-{
-    return json::generateResult(command_handler::getScanNetworkRequest(data));
 }

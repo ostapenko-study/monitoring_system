@@ -2,8 +2,6 @@
 #include <QJsonObject>
 #include "websockets_common.h"
 
-const QString ClientConfig::default_config_file = "./client.conf";
-
 QJsonObject ClientConfig::toJson() const
 {
     QJsonObject answer;

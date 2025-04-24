@@ -38,6 +38,19 @@ void WebsocketServer::sendMessage(const QString &message, const QString &key)
     websocket::sendTextMessage(socket, message);
 }
 
+void WebsocketServer::sendMessageToAll(const QString &message)
+{
+    for(auto it = m_key_to_socket.begin(); it != m_key_to_socket.end(); ++it)
+    {
+        websocket::sendTextMessage(it->second, message);
+    }
+}
+
+int WebsocketServer::port() const
+{
+    return m_server->serverPort();
+}
+
 void WebsocketServer::onNewConnection()
 {
     auto socket = m_server->nextPendingConnection();
@@ -80,7 +93,7 @@ void WebsocketServer::processTextMessage(QString message)
         m_key_to_socket[client_key] = client;
     }
 
-    emit received(obj);
+    emit received(obj, client_key);
 }
 
 void WebsocketServer::processBinaryMessage(QByteArray message)
@@ -106,9 +119,20 @@ void WebsocketServer::onClosed()
     emit closed();
 }
 
-WebsocketServer* createWebsocketServer()
+QString getServerWebsocketConfigFileNameByRole(const WebsocketServer::Role role)
 {
-    auto answer = new WebsocketServer(ServerConfig::generateFromFile());
+    static const std::map<WebsocketServer::Role, QString> __data = {
+        {WebsocketServer::Role::Proxy, "proxy_websocket_server.conf"},
+        {WebsocketServer::Role::ServerSystem, "server_system_websocket_server.conf"},
+        {WebsocketServer::Role::ServerView, "server_view_websocket_server.conf"},
+    };
+
+    return __data.at(role);
+}
+
+WebsocketServer* createWebsocketServer(const WebsocketServer::Role role)
+{
+    auto answer = new WebsocketServer(ServerConfig::generateFromFile(getServerWebsocketConfigFileNameByRole(role)));
 
     return answer;
 }
