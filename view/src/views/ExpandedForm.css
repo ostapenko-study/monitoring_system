@@ -1,0 +1,33 @@
+.container{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid blue;
+    background: lightblue;
+    margin: 3px;
+    padding: 3px;
+}
+
+.visible_btn{
+    background:url('../images/visible.png') no-repeat left center;
+    background-size: cover;
+    width: 32px;
+    height: 32px;
+    border: 0px;
+}
+
+.no_visible_btn{
+    background:url('../images/not_visible.png') no-repeat left center;
+    background-size: cover;
+    width: 32px;
+    height: 32px;
+    border: 0px;
+}
+
+.title{
+    margin: auto;
+    margin-left: 3px; 
+}
+
+.child{
+    margin-left: 18px;
+}

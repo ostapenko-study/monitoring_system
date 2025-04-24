@@ -1,0 +1,1 @@
+export const DECIMAL_POINTS = 3
