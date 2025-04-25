@@ -13,5 +13,7 @@ int main(int argc, char *argv[])
     controller->setServerSystem(server_system);
     controller->setServerView(server_view);
 
+    controller->init();
+
     return a.exec();
 }

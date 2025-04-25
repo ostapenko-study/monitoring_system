@@ -9,13 +9,19 @@ WebsocketServer::WebsocketServer(const ServerConfig& config, QObject *parent)
     : QObject(parent)
     , m_server(new QWebSocketServer(config.serverName(),
                                    QWebSocketServer::NonSecureMode, this))
+    , m_config{config}
 {
     if(m_server->listen(QHostAddress::Any, config.port))
     {
+        printDebugMessage("socket server open");
         connect(m_server, &QWebSocketServer::newConnection,
                 this, &WebsocketServer::onNewConnection);
         connect(m_server, &QWebSocketServer::closed,
                 this, &WebsocketServer::onClosed);
+    }
+    else
+    {
+        printDebugMessage("socket server open error");
     }
 }
 
@@ -40,6 +46,8 @@ void WebsocketServer::sendMessage(const QString &message, const QString &key)
 
 void WebsocketServer::sendMessageToAll(const QString &message)
 {
+    printDebugMessage("send to all: " + message);
+    printDebugMessage(QString("sockets count: %1").arg(m_key_to_socket.size()));
     for(auto it = m_key_to_socket.begin(); it != m_key_to_socket.end(); ++it)
     {
         websocket::sendTextMessage(it->second, message);
@@ -74,6 +82,8 @@ void WebsocketServer::processTextMessage(QString message)
         return;
     }
 
+    printDebugMessage(QString("key %1; message: %2").arg(client_key).arg(message));
+
     const auto str_role = obj.value("role").toString();
     if(str_role.isEmpty())
     {
@@ -86,6 +96,7 @@ void WebsocketServer::processTextMessage(QString message)
         QVector<WebsocketClient::Role>{
             WebsocketClient::Role::Agent,
             WebsocketClient::Role::Proxy,
+            WebsocketClient::Role::View,
         }.count(client_role)
         )
     {
@@ -107,11 +118,21 @@ void WebsocketServer::onSocketDisconnected()
 {
     auto client = qobject_cast<QWebSocket* >(sender());
 
+    if(!m_socket_to_key.count(client)){
+        printDebugMessage("Client disconnected view ?");
+        return;
+    }
+
     const auto socket_key = m_socket_to_key.at(client);
     m_key_to_socket.erase(socket_key);
     m_socket_to_key.erase(client);
 
     emit disconnected(socket_key);
+}
+
+void WebsocketServer::printDebugMessage(QString text) const
+{
+    qDebug() << "printDebugMessage" << m_config.server_name << m_config.port << text;
 }
 
 void WebsocketServer::onClosed()

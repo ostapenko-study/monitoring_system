@@ -13,6 +13,8 @@ public:
     void setServerView(WebsocketServer* ptr) {m_server_view = ptr;}
     void setServerSystem(WebsocketServer* ptr) {m_server_system = ptr;}
 
+    void init();
+
 signals:
 
 protected:

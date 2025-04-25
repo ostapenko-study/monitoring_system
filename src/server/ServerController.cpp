@@ -15,6 +15,14 @@ ServerController::ServerController(QObject *parent)
 
 }
 
+void ServerController::init()
+{
+    connect(m_server_view, &WebsocketServer::received,
+            this, &ServerController::onServerViewReceived);
+    connect(m_server_system, &WebsocketServer::received,
+            this, &ServerController::onServerSystemReceived);
+}
+
 void ServerController::onServerSystemReceived(QJsonObject data)
 {
     m_server_view->sendMessageToAll(json::toString(data));
@@ -31,6 +39,10 @@ void ServerController::onServerViewReceived(QJsonObject obj)
     }else{
         auto answer = processMessage(obj);
 
+
+        answer["command"] = obj.value("command");
+        answer["key"] = obj.value("key");
+        answer["role"] = obj.value("role");
         answer["index"] = obj.value("index");
 
         m_server_view->sendMessageToAll(json::toString(answer));

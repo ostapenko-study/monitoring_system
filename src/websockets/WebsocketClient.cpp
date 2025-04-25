@@ -7,6 +7,8 @@ std::map<WebsocketClient::Role, QString> WebsocketClient::role_to_str = {
         {Role::Sender, "sender"},
         {Role::Proxy, "proxy"},
         {Role::Agent, "agent"},
+        {Role::Server, "server"},
+        {Role::View, "view"},
     };
 
 WebsocketClient::WebsocketClient(QObject* parent)

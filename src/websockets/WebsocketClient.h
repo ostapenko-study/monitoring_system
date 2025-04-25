@@ -21,6 +21,7 @@ public:
         Proxy,
         Agent,
         Server,
+        View,
     };
 
     static std::map<Role, QString> role_to_str;

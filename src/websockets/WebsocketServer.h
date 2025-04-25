@@ -35,6 +35,8 @@ protected:
     void processBinaryMessage(QByteArray message);
     void onSocketDisconnected();
 
+    void printDebugMessage(QString text) const;
+
     void onClosed();
 
     const QString m_key;
@@ -43,6 +45,8 @@ protected:
 
     std::map<QString, QPointer<QWebSocket>> m_key_to_socket;
     std::map<QWebSocket*, QString> m_socket_to_key;
+
+    const ServerConfig m_config;
 };
 
 QString getServerWebsocketConfigFileNameByRole(const WebsocketServer::Role role);
