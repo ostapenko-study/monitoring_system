@@ -14,7 +14,7 @@ export const ServerManager = ({ sendMessage , lastResponse}) => {
   }, [lastResponse]);
 
   return (
-      <ExpandedForm title={"Server commands"}>
+      <ExpandedForm title={"Команди для сервера"}>
         <NetworkScan sendMessage={sendMessage} lastResponse={scanData} />
       </ExpandedForm>
   );

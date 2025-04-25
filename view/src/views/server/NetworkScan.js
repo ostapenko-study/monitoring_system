@@ -16,8 +16,16 @@ export const NetworkScan = ({ sendMessage, lastResponse }) => {
     }
   }, [lastResponse]);
 
+  const onConfigure = (ip) => {
+    console.log("!onConfigure" + ip)
+  }
+
+  const onTop = (ip) => {
+    console.log("!onTop" + ip)
+  }
+
   return (
-    <ExpandedForm title="scan network">
+    <ExpandedForm title="Сканування мережі">
 
       <div className="scan-button-wrapper">
         <button 
@@ -29,8 +37,8 @@ export const NetworkScan = ({ sendMessage, lastResponse }) => {
         </button>
       </div>
       {!isScanning && lastResponse && Array.isArray(lastResponse) && lastResponse.length > 0 && (
-        <ExpandedForm title="scan result:">
-          <NetworkInfoList items={lastResponse} />
+        <ExpandedForm title="Результат сканування:">
+          <NetworkInfoList items={lastResponse} onConfigure={onConfigure} onTop={onTop} />
         </ExpandedForm>
       )}
     </ExpandedForm>
