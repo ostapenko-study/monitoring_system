@@ -5,9 +5,7 @@ import SourceView from './views/SourceView'
 import NoConnection from './views/NoConnection';
 import ServerManager from './views/server/ServerManager';
 
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+import { getRandomInt } from './utils';
 
 export const WebSocketDemo = () => {
   const [socketUrl, setSocketUrl] = useState('ws://localhost:8020');
@@ -19,7 +17,10 @@ export const WebSocketDemo = () => {
   const sendMessageWrapper = (pkg) => {
     pkg.key = "view";
     pkg.role = "view";
-    pkg.index = getRandomInt(1, 10000000)
+    if(!("index" in pkg)){
+      pkg.index = getRandomInt(1, 10000000)
+    }
+    console.log(pkg)
     sendMessage(JSON.stringify(pkg));
   };
 
@@ -46,8 +47,6 @@ export const WebSocketDemo = () => {
     [ReadyState.CLOSED]: 'Closed',
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
-
-  console.log(viewDataResponse)
 
   return (
     <div>

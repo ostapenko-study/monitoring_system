@@ -2,8 +2,15 @@ import React, { useState, useEffect } from "react";
 import ExpandedForm from "./../ExpandedForm";
 import NetworkInfoList from "./NetworkInfoList";
 
+import AddressWorkerModal from "./AddressWorkerModal";
+
 export const NetworkScan = ({ sendMessage, lastResponse }) => {
   const [isScanning, setIsScanning] = useState(false);
+  const [scanData, setScanData] = useState([]);
+
+
+  const [showAddressWorkerModal, setAddressWorkerModal] = useState(false);
+  const [selectedIP, setSelectedIP] = useState(null);
 
   const handleScan = () => {
     setIsScanning(true);
@@ -11,18 +18,16 @@ export const NetworkScan = ({ sendMessage, lastResponse }) => {
   };
 
   useEffect(() => {
-    if (lastResponse && Array.isArray(lastResponse)) {
+    if (lastResponse.command === "get_scan"){
       setIsScanning(false);
+      setScanData(lastResponse.interfaces)
     }
   }, [lastResponse]);
 
-  const onConfigure = (ip) => {
-    console.log("!onConfigure" + ip)
-  }
-
-  const onTop = (ip) => {
-    console.log("!onTop" + ip)
-  }
+  const handleOpenAddressWorker = (ip) => {
+    setSelectedIP(ip);
+    setAddressWorkerModal(true);
+  };
 
   return (
     <ExpandedForm title="Сканування мережі">
@@ -36,11 +41,21 @@ export const NetworkScan = ({ sendMessage, lastResponse }) => {
           {isScanning ? "Сканування..." : "Сканувати мережу"}
         </button>
       </div>
-      {!isScanning && lastResponse && Array.isArray(lastResponse) && lastResponse.length > 0 && (
+      {!isScanning && scanData.length > 0 && (
         <ExpandedForm title="Результат сканування:">
-          <NetworkInfoList items={lastResponse} onConfigure={onConfigure} onTop={onTop} />
+          <NetworkInfoList items={scanData} onOpenAddressWorker={handleOpenAddressWorker}/>
         </ExpandedForm>
       )}
+
+      {showAddressWorkerModal && (
+        <AddressWorkerModal 
+          ip={selectedIP} 
+          sendMessage={sendMessage} 
+          lastResponse={lastResponse} 
+          onClose={() => setAddressWorkerModal(false)} 
+        />
+      )}
+
     </ExpandedForm>
   );
 };

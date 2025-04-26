@@ -3,19 +3,10 @@ import NetworkScan from './NetworkScan';
 import ExpandedForm from './../ExpandedForm';
 
 export const ServerManager = ({ sendMessage , lastResponse}) => {
-  
-  const [scanData, setScanData]  = useState([])
-
-
-  useEffect(() => {
-    if(lastResponse.command === "get_scan"){
-        setScanData(lastResponse.interfaces)
-    }
-  }, [lastResponse]);
 
   return (
       <ExpandedForm title={"Команди для сервера"}>
-        <NetworkScan sendMessage={sendMessage} lastResponse={scanData} />
+        <NetworkScan sendMessage={sendMessage} lastResponse={lastResponse} />
       </ExpandedForm>
   );
 };

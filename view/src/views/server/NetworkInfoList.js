@@ -2,15 +2,14 @@ import React from "react";
 
 import NetworkInfo from "./NetworkInfo";
 
-export const NetworkList = ({ items, onConfigure, onTop}) => {
+export const NetworkList = ({ items, onOpenAddressWorker}) => {
   return (
     <div style={styles.listWrapper}>
       {
         items.map((item, index) =>
            <NetworkInfo 
               data={item}
-              onConfigure={onConfigure}
-              onTop={onTop}
+              onOpenAddressWorker={onOpenAddressWorker}
             />
           )
       }

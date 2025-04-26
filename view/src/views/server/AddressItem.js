@@ -1,18 +1,14 @@
 import React from "react";
 
-const AddressItem = ({ address, isHost, onConfigure, onTop }) => {
+const AddressItem = ({ address, isHost, onOpenAddressWorker}) => {
   return (
     <li style={styles.item}>
       <span style={isHost ? styles.host : null}>{address}</span>
       {!isHost && (
-        <div style={styles.buttonGroup}>
-          <button style={styles.button} onClick={() => onConfigure(address)}>
-            Сконфігурувати
+        <div>
+          <button style={styles.button} onClick={() => onOpenAddressWorker(address)}>
+            Працювати з вузлом
           </button>
-          <button style={styles.button} onClick={() => onTop(address)}>
-            Переглянути запущені процеси
-          </button>
-
         </div>
       )}
     </li>
@@ -38,10 +34,6 @@ const styles = {
     padding: "4px 10px",
     borderRadius: "4px",
     cursor: "pointer",
-  },
-  buttonGroup: {
-    display: "flex",
-    gap: "8px",
   },
 };
 

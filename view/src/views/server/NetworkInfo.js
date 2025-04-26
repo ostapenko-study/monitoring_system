@@ -2,7 +2,7 @@ import React from "react";
 import ExpandedForm from "./../ExpandedForm";
 import AddressItem from "./AddressItem";
 
-export const NetworkInfo = ({ data, onConfigure, onTop}) => {
+export const NetworkInfo = ({ data, onOpenAddressWorker}) => {
   const { ip, mac, name, netmask, addresses } = data;
 
   return (
@@ -23,8 +23,7 @@ export const NetworkInfo = ({ data, onConfigure, onTop}) => {
                   key={i}
                   address={addr}
                   isHost={addr === ip}
-                  onConfigure={onConfigure}
-                  onTop={onTop}
+                  onOpenAddressWorker={onOpenAddressWorker}
                 />
               ))}
             </ul>
