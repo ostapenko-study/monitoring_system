@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 
 import SshCredentialsForm from './SshCredentialsForm';
 import ProcessTopManager from './ProcessTopManager'
+import SetupDeviceManager from './SetupDeviceManager'
 
 const AddressWorkerModal = ({ ip, onClose, sendMessage, lastResponse}) => {
 
@@ -25,6 +26,7 @@ const AddressWorkerModal = ({ ip, onClose, sendMessage, lastResponse}) => {
           onChange={setCredentials}
         />
         <ProcessTopManager sendMessage={sendMessageWrapper} lastResponse={lastResponse} ip={ip}/>
+        <SetupDeviceManager sendMessage={sendMessageWrapper} lastResponse={lastResponse} ip={ip}/>
       </div>
     </div>
   );

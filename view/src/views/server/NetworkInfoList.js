@@ -6,7 +6,10 @@ export const NetworkList = ({ items, onOpenAddressWorker}) => {
   return (
     <div style={styles.listWrapper}>
       {
-        items.map((item, index) =>
+        items
+        .slice()
+        .sort((a, b) => b.name.localeCompare(a.name))
+        .map((item, index) =>
            <NetworkInfo 
               data={item}
               onOpenAddressWorker={onOpenAddressWorker}
