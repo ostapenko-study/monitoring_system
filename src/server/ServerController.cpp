@@ -65,15 +65,15 @@ QJsonObject ServerController::processMessage(QJsonObject data)
 
 QJsonObject ServerController::getTopBySshRequest(const QJsonObject & data)
 {
-    return json::generateResult(command_handler::getTopRequestBySsh(data));
+    return command_handler::getTopRequestBySsh(data);
 }
 
 QJsonObject ServerController::getScanRequest(const QJsonObject & data)
 {
-    return json::generateResult(command_handler::getScanNetworkRequest(data));
+    return command_handler::getScanNetworkRequest(data);
 }
 
 QJsonObject ServerController::setupDeviceBySshRequest(const QJsonObject & data)
 {
-    return json::generateResult(command_handler::setupDeviceBySsh(data, m_server_system->port()));
+    return command_handler::setupDeviceBySsh(data, m_server_system->port());
 }

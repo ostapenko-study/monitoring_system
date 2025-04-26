@@ -16,8 +16,30 @@ QJsonObject& appendIndex(QJsonObject &output, const QJsonObject &request)
     return output;
 }
 
+namespace {
 
-QJsonObject getTopRequest(const QJsonObject& data)
+template<typename Func>
+QJsonObject wrapWithErrorHandling(Func func, const QJsonObject& data)
+{
+    try {
+        return json::generateResult(func(data));
+    } catch (const std::exception& ex) {
+        QJsonObject error = json::generateError(QString::fromStdString(ex.what()));
+        return appendIndex(error, data);
+    } catch (...) {
+        QJsonObject error = json::generateError("Unknown error");
+        return appendIndex(error, data);
+    }
+}
+
+
+QString generateSshBackgroundCommand(QString app_name){
+    return "sh -c \'nohup " + app_name + " > /dev/null 2>&1 < /dev/null &\'";
+}
+
+
+
+QJsonObject __getTopRequest(const QJsonObject& data)
 {
     const auto stats = getProcessTopInfos();
     QJsonObject answer;
@@ -25,14 +47,14 @@ QJsonObject getTopRequest(const QJsonObject& data)
     return json::generateResult(appendIndex(answer, data));
 }
 
-QJsonObject getScanNetworkRequest(const QJsonObject& data)
+QJsonObject __getScanNetworkRequest(const QJsonObject& data)
 {
     QJsonObject answer;
     answer["interfaces"] = network_scanner::get_full_interfaces().toJson();
     return json::generateResult(appendIndex(answer, data));
 }
 
-QJsonObject getTopRequestBySsh(const QJsonObject & data)
+QJsonObject __getTopRequestBySsh(const QJsonObject & data)
 {
     const auto stats = getProcessTopInfosBySsh(SshCredentials::fromJson(data));
     QJsonObject answer;
@@ -40,13 +62,13 @@ QJsonObject getTopRequestBySsh(const QJsonObject & data)
     return json::generateResult(appendIndex(answer, data));
 }
 
-namespace{
-
-QString generateSshBackgroundCommand(QString app_name){
-    return "sh -c \'nohup " + app_name + " > /dev/null 2>&1 < /dev/null &\'";
 }
 
-}
+#define WRAPPER_FUNC(func_name) QJsonObject func_name(const QJsonObject & data) {return wrapWithErrorHandling(__##func_name, data); }
+WRAPPER_FUNC(getTopRequest)
+WRAPPER_FUNC(getScanNetworkRequest)
+WRAPPER_FUNC(getTopRequestBySsh)
+#undef WRAPPER_FUNC
 
 QJsonObject setupDeviceBySsh(const QJsonObject& data, int port)
 {

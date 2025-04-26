@@ -41,12 +41,15 @@ QString run_ssh(const SshCredentials &credentials, const QString &command)
     for (const QString& str : command.split(" ")) {
         __command.push_back(str.toStdString());
     }
-    return QString::fromStdString(
-        run_ssh_with_password(credentials.host().toStdString(), credentials.password.toStdString(), __command)
-    );
+    const auto [result, status] = run_ssh_with_password(credentials.host().toStdString(), credentials.password.toStdString(), __command);
+    if(status){
+        return QString::fromStdString(result);
+    }else{
+        throw std::runtime_error(result);
+    }
 }
 
-std::string run_ssh_with_password(const std::string &userHost, const std::string &password, const std::vector<std::string> &remoteCommand) {
+std::pair<std::string, bool> run_ssh_with_password(const std::string &userHost, const std::string &password, const std::vector<std::string> &remoteCommand) {
     std::cerr << userHost << password << std::endl;
     for(const auto& str: remoteCommand){
         std::cerr << str << " ";
@@ -97,8 +100,12 @@ std::string run_ssh_with_password(const std::string &userHost, const std::string
                 passwordSent = true;
             }
         } else if (ret == 0) {
-            std::cerr << "\n[!] Таймаут читання.\n";
-            break;
+            std::cerr << "\n[!] Таймаут читання. Завершуємо дочірній процес.\n";
+
+            kill(pid, SIGKILL);
+            waitpid(pid, nullptr, 0);
+
+            return {"[!] Таймаут читання. Завершуємо дочірній процес.", false};
         } else {
             perror("poll");
             break;
@@ -107,7 +114,7 @@ std::string run_ssh_with_password(const std::string &userHost, const std::string
 
     int status;
     waitpid(pid, &status, 0);
-    return buffer;
+    return {buffer, true};
 }
 
 std::string expand_path(const std::string& path) {
