@@ -93,3 +93,4 @@ chrome-user-data
 **/build
 **/build/*
 
+exec/*

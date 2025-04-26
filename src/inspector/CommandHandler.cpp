@@ -127,7 +127,7 @@ QJsonObject setupDeviceBySsh(const QJsonObject& data, int port)
     for(const auto& app : apps){
         if(data.value(app).toBool()){
             qDebug() << generateSshBackgroundCommand(remote_dir + app);
-            run_ssh(ssh_credentials, generateSshBackgroundCommand(remote_dir + app));
+            run_ssh(ssh_credentials, generateSshBackgroundCommand(remote_dir + "run_" + app + ".sh"));
         }
     }
 

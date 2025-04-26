@@ -3,9 +3,11 @@
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication a(argc, argv);
+
     auto controller = new AgentController;
 
     controller->init();
 
-    return 0;
+    return a.exec();
 }

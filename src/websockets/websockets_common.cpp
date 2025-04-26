@@ -9,7 +9,8 @@ QByteArray file::read(const QString &filename)
     QFile file(filename);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qWarning() << "Failed to open file:" << file.errorString();
+        qWarning() << "Failed to open file:" << file.fileName() << file.errorString();
+        return {};
         throw std::logic_error("failed to open file");
     }
 
@@ -57,6 +58,7 @@ QJsonDocument json::toJson(const QByteArray &data)
     if(jsonDoc.isNull())
     {
         qWarning() << "Failed to parse JSON";
+        return {};
         throw std::logic_error("failed to parse JSON");
     }
     return jsonDoc;

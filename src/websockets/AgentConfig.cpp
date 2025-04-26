@@ -20,7 +20,7 @@ AgentConfig AgentConfig::createFromJson(const QJsonObject & obj)
     PARSE_ARRAY(processes);
 #undef PARSE_ARRAY
 
-    answer.timeout = obj.value("timeout").toInt();
+    answer.timeout = obj.value("timeout").toInt(1000);
 
     return answer;
 }

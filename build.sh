@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+
+echo "[INFO] Чищу старі білди..."
+rm -rf src/build src/dist
+mkdir -p src/build src/dist
+
 # Будуємо контейнер
 docker build -t monitoring-builder .
 
@@ -27,3 +32,14 @@ Categories=Utility;\" > \$app.desktop
 
 echo ""
 echo "✅ Готово! Файли зібрані в src/build/"
+
+mkdir -p /src/dist
+
+# копіюємо всі бінарники
+cp src/build/agent/agent src/dist/
+cp src/build/proxy/proxy src/dist/
+cp src/build/sender/sender src/dist/
+cp src/build/server/server src/dist/
+
+
+echo "✅ Готово! скопійовано в /src/dist/"
