@@ -34,7 +34,7 @@ export const WebSocketDemo = () => {
           setViewDataResponse(parsed)
         }else{
           const newMainData = mainData ? mainData : new Map()
-          newMainData.set(parsed["id"], parsed)
+          newMainData.set(parsed["key"], parsed.data)
           setMainData(newMainData)  
         }
     }
@@ -56,7 +56,7 @@ export const WebSocketDemo = () => {
         ?
         <div>
           <ServerManager sendMessage={sendMessageWrapper} lastResponse={viewDataResponse}/>
-          {mainData ? mainData.keys().map((index) => <SourceView key={index} data={mainData.get(index)} />) : null}
+          {mainData ? mainData.keys().map((index) => <SourceView key={index} title={index} data={mainData.get(index)} />) : null}
         </div>
         :
         <NoConnection url={socketUrl}/>

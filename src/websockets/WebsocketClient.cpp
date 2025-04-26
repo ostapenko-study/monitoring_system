@@ -74,6 +74,7 @@ void WebsocketClient::sendMessage(const QString &msg)
     {
         QJsonObject pkg;
         pkg.insert("from", m_key);
+        pkg.insert("key", m_key);
         pkg.insert("role", roleToStr(m_role));
         pkg.insert("data", msg);
 

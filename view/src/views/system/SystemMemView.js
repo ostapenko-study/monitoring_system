@@ -6,8 +6,6 @@ import ExpandedForm from '../ExpandedForm';
 
 export const SystemMemView = ({data, totalMemory, totalSwap}) => {
 
-  console.log(data, totalMemory, totalSwap)
-
     const columns = [
         {
           field: 'name',

@@ -23,8 +23,83 @@ void ServerController::init()
             this, &ServerController::onServerSystemReceived);
 }
 
+namespace{
+
+QJsonObject convert(const QJsonObject& obj) {
+    QJsonObject system = obj["system"].toObject();
+    QJsonObject mem = system["mem"].toObject();
+
+    QJsonObject pkg;
+    pkg["id"] = obj["id"];
+
+    QJsonObject systemObj;
+    systemObj["cpu"] = system["cpu"];
+
+    QJsonObject memoryMain;
+    memoryMain["buffers"] = mem["Buffers"];
+    memoryMain["cached"] = mem["Cached"];
+    memoryMain["free"] = mem["MemFree"];
+    memoryMain["available"] = mem["MemAvailable"];
+    memoryMain["total"] = mem["MemTotal"];
+
+    QJsonObject memorySwap;
+    memorySwap["cached"] = mem["SwapCached"];
+    memorySwap["free"] = mem["SwapFree"];
+    memorySwap["total"] = mem["SwapTotal"];
+
+    QJsonObject memory;
+    memory["main"] = memoryMain;
+    memory["swap"] = memorySwap;
+
+    systemObj["memory"] = memory;
+    pkg["system"] = systemObj;
+
+    QJsonArray processesArray;
+    for (const QJsonValue& processVal : obj["processes"].toArray()) {
+        QJsonObject processObj = processVal.toObject();
+        QJsonObject proc;
+        proc["name"] = processObj["process"];
+
+        QJsonArray pidsArray;
+        for (const QJsonValue& pidVal : processObj["pids"].toArray()) {
+            QJsonObject pidObj = pidVal.toObject();
+
+            QJsonObject pidInfo;
+            pidInfo["pid"] = pidObj["pid"];
+            pidInfo["ppid"] = pidObj["ppid"];
+            pidInfo["state"] = pidObj["state"];
+            pidInfo["cpu"] = pidObj["cpu"];
+
+            QJsonObject memObj = pidObj["mem"].toObject();
+            QJsonObject memoryInfo;
+            if (memObj.contains("VmPeak")) memoryInfo["peak"] = memObj["VmPeak"];
+            if (memObj.contains("VmSize")) memoryInfo["size"] = memObj["VmSize"];
+            if (memObj.contains("VmSwap")) memoryInfo["swap"] = memObj["VmSwap"];
+            if (memObj.contains("VmData")) memoryInfo["data"] = memObj["VmData"];
+            if (memObj.contains("VmStk"))  memoryInfo["stk"] = memObj["VmStk"];
+            if (memObj.contains("VmExe"))  memoryInfo["exe"] = memObj["VmExe"];
+
+            pidInfo["memory"] = memoryInfo;
+            pidsArray.append(pidInfo);
+        }
+
+        proc["pids"] = pidsArray;
+        processesArray.append(proc);
+    }
+
+    pkg["processes"] = processesArray;
+
+    return pkg;
+}
+
+}
+
 void ServerController::onServerSystemReceived(QJsonObject data)
 {
+    const auto obj = json::parseStr(data.value("data").toString());
+    if(obj.value("index").toString("") == "monitoring_package_by_timer"){
+        data["data"] = convert(obj);
+    }
     m_server_view->sendMessageToAll(json::toString(data));
 }
 
