@@ -49,6 +49,8 @@ const styles = {
     borderRadius: "8px",
     width: "800px",
     maxWidth: "90%",
+    overflowY: 'auto',
+    maxHeight: "90%",
   },
   closeButton: {
     position: "absolute",

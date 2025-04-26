@@ -50,7 +50,6 @@ QString run_ssh(const SshCredentials &credentials, const QString &command)
 }
 
 std::pair<std::string, bool> run_ssh_with_password(const std::string &userHost, const std::string &password, const std::vector<std::string> &remoteCommand) {
-    std::cerr << userHost << password << std::endl;
     for(const auto& str: remoteCommand){
         std::cerr << str << " ";
     }
@@ -127,7 +126,7 @@ std::string expand_path(const std::string& path) {
     return path;
 }
 
-std::string run_scp_with_password(const std::string &source, const std::string &destination, const std::string &password) {
+std::string run_scp_file_with_password(const std::string &source, const std::string &destination, const std::string &password) {
     int master_fd;
     pid_t pid = forkpty(&master_fd, nullptr, nullptr, nullptr);
 
@@ -188,11 +187,15 @@ std::string run_scp_with_password(const std::string &source, const std::string &
     return buffer;
 }
 
-QString run_sсp_from_local_to_remote(const SshCredentials &credentials, const std::string &source, const std::string &destination)
+QString run_sсp_folder_from_local_to_remote(const SshCredentials &credentials, const std::string &source, const std::string &destination)
 {
-    return QString::fromStdString(
-        run_scp_with_password(source, credentials.host().toStdString() + ":" + destination, credentials.password.toStdString())
-    );
+    run_ssh(credentials, "mkdir -p " + QString::fromStdString(destination));
+    const QString tmp_archive = "tmp.tar";
+    run_local_bash_command("tar -czf " + tmp_archive + " -C " + QString::fromStdString(source) + " .");
+    run_scp_file_with_password(tmp_archive.toStdString(), credentials.host().toStdString() + ":" + destination, credentials.password.toStdString());
+    run_ssh(credentials, "tar -xzf " + QString::fromStdString(destination) +  tmp_archive + " -C " + QString::fromStdString(destination));
+
+    return {};
 }
 
 #include <QProcess>

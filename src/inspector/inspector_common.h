@@ -16,3 +16,5 @@ std::vector<std::string> split(std::string s, const std::string& delimiter);
 
 bool ensureDirectoryExists(const QString &path);
 
+std::string joinVector(const std::vector<std::string>& vec, const std::string& delimiter = " ");
+

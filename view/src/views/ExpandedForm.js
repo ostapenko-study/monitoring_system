@@ -12,11 +12,11 @@ export const ExpandedForm = ({title, children}) => {
 
     return (
         <div>
-            <div class="container">
-                <div class="title">{title}</div>
-                <button class={isVisible ? "visible_btn" : "no_visible_btn"} onClick={buttonHandler} type="button" />
+            <div className="container">
+                <div className="title">{title}</div>
+                <button className={isVisible ? "visible_btn" : "no_visible_btn"} onClick={buttonHandler} type="button" />
             </div>
-            {isVisible ? <div class="child">{children}</div> : null}
+            {isVisible ? <div className="child">{children}</div> : null}
         </div>
     )
 }

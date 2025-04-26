@@ -1,5 +1,6 @@
 #include "inspector_common.h"
 #include <QDir>
+#include <sstream>
 
 std::vector<std::string> split(std::string s, const std::string &delimiter) {
     std::vector<std::string> tokens;
@@ -29,4 +30,18 @@ bool ensureDirectoryExists(const QString &path) {
     } else {
         return true;
     }
+}
+
+std::string joinVector(const std::vector<std::string> &vec, const std::string &delimiter) {
+    if (vec.empty()) return ""; // Якщо вектор порожній, повертаємо порожній рядок
+
+    std::ostringstream oss;
+    for (size_t i = 0; i < vec.size(); ++i) {
+        oss << vec[i];
+        if (i != vec.size() - 1) {
+            oss << delimiter;  // Додаємо роздільник, але не в кінці
+        }
+    }
+
+    return oss.str(); // Повертаємо склеєний рядок
 }

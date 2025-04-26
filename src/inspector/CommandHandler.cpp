@@ -72,7 +72,7 @@ WRAPPER_FUNC(getTopRequestBySsh)
 
 QJsonObject setupDeviceBySsh(const QJsonObject& data, int port)
 {
-    static const auto apps = {"agent", "proxy"};
+    static const auto apps = {"agent", "proxy", "sender"};
 
     auto ssh_credentials = SshCredentials::fromJson(data);
     const auto interface = network_scanner::find_interface_by_ip(ssh_credentials.ip);
@@ -82,7 +82,7 @@ QJsonObject setupDeviceBySsh(const QJsonObject& data, int port)
         return json::generateError("don't find network interface");
     }
 
-    static const QString tmp_dir = "~/.monitoring_system_tmp/";
+    static const QString tmp_dir = ".monitoring_system_tmp/";
     static const QString remote_dir = "~/.monitoring_system/";
 
     if(!ensureDirectoryExists(tmp_dir))
@@ -91,7 +91,7 @@ QJsonObject setupDeviceBySsh(const QJsonObject& data, int port)
     }
 
     for(const auto& app : apps){
-        run_local_bash_command(QString("cp ./") + app + tmp_dir);
+        run_local_bash_command(QString("cp ./") + app + " " + tmp_dir);
     }
 
     {
@@ -120,12 +120,13 @@ QJsonObject setupDeviceBySsh(const QJsonObject& data, int port)
         }
     }
 
-    auto responce = run_sсp_from_local_to_remote(ssh_credentials, "-r " + tmp_dir.toStdString(), remote_dir.toStdString());
+    auto responce = run_sсp_folder_from_local_to_remote(ssh_credentials, tmp_dir.toStdString(), remote_dir.toStdString());
 
     //check responce
 
     for(const auto& app : apps){
         if(data.value(app).toBool()){
+            qDebug() << generateSshBackgroundCommand(remote_dir + app);
             run_ssh(ssh_credentials, generateSshBackgroundCommand(remote_dir + app));
         }
     }

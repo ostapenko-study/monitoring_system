@@ -11,6 +11,7 @@ export const NetworkList = ({ items, onOpenAddressWorker}) => {
         .sort((a, b) => b.name.localeCompare(a.name))
         .map((item, index) =>
            <NetworkInfo 
+              key={index}
               data={item}
               onOpenAddressWorker={onOpenAddressWorker}
             />
