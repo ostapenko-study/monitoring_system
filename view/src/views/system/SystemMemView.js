@@ -39,14 +39,14 @@ export const SystemMemView = ({data, totalMemory, totalSwap}) => {
     return (
         <div>
             
-            <ExpandedForm title="Main">
+            <ExpandedForm title="Основна">
                 <DataGrid
                     rows={main_items}
                     columns={columns}
                     hideFooter={true}
                 />
             </ExpandedForm>
-            <ExpandedForm title="Swap">
+            <ExpandedForm title="Свап">
                 <DataGrid
                     rows={swap_items}
                     columns={columns}

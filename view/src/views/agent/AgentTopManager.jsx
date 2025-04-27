@@ -2,11 +2,10 @@ import React from "react";
 import ManagerWrapper from "../ManagerWrapper";
 import ProcessTopView from "../ProcessTopView";
 
-const ProcessTopManager = ({ sendMessage, lastResponse, ip }) => {
+const AgentTopManager = ({ sendMessage, lastResponse }) => {
   const handleSendMessage = ({ index }) => {
     sendMessage({
-      command: "get_top_by_ssh",
-      data: { ip: ip },
+      command: "get_top",
       index: index
     });
   };
@@ -18,13 +17,13 @@ const ProcessTopManager = ({ sendMessage, lastResponse, ip }) => {
       title="Перелік процесів"
       resultGenerator = {
         (data) => {
-          if (!data.top || data.top.length === 0) {
+          if (!data.data.top || data.data.top.length === 0) {
             return <div>Запит (якщо був) повернув пусту відповідь</div>;
           }
-          return <ProcessTopView processes={data.top} />;
+          return <ProcessTopView processes={data.data.top} />;
         }}
     />
   );
 };
 
-export default ProcessTopManager;
+export default AgentTopManager;

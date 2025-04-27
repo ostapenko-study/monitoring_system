@@ -88,6 +88,8 @@ QJsonObject convert(const QJsonObject& obj) {
     }
 
     pkg["processes"] = processesArray;
+    pkg["config"] = obj["config"];
+    pkg["index"] = obj["index"];
 
     return pkg;
 }
@@ -99,7 +101,10 @@ void ServerController::onServerSystemReceived(QJsonObject data)
     const auto obj = json::parseStr(data.value("data").toString());
     if(obj.value("index").toString("") == "monitoring_package_by_timer"){
         data["data"] = convert(obj);
+    }else{
+        data["data"] = obj;
     }
+    data["index"] = obj.value("index");
     m_server_view->sendMessageToAll(json::toString(data));
 }
 

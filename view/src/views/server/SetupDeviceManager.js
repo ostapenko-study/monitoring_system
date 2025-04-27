@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import ManagerWrapper from "./ManagerWrapper";
+import ManagerWrapper from "../ManagerWrapper";
 
 import "../../styles/box.css";
 
 const SetupDeviceManager = ({ sendMessage, lastResponse, ip }) => {
-  const [useProxy, setUseProxy] = useState(false);
+  // const [useProxy, setUseProxy] = useState(false);
   const [useAgent, setUseAgent] = useState(false);
   const [nodeName, setNodeName] = useState("");
 
@@ -13,7 +13,7 @@ const SetupDeviceManager = ({ sendMessage, lastResponse, ip }) => {
       command: "setup_device_by_ssh",
       data: {
         ip: ip,
-        proxy: useProxy,
+        // proxy: useProxy,
         agent: useAgent,
         name_id: nodeName,
       },

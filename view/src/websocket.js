@@ -30,12 +30,13 @@ export const WebSocketDemo = () => {
   useEffect(() => {
     if (lastMessage !== null) {
         const parsed = JSON.parse(lastMessage.data)
-        if(parsed.role == "view"){
-          setViewDataResponse(parsed)
-        }else{
+        console.log(parsed)
+        if(parsed.index === "monitoring_package_by_timer"){
           const newMainData = mainData ? mainData : new Map()
           newMainData.set(parsed["key"], parsed.data)
           setMainData(newMainData)  
+        }else{
+          setViewDataResponse(parsed)
         }
     }
   }, [lastMessage]);
@@ -48,6 +49,12 @@ export const WebSocketDemo = () => {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
 
+  useEffect (() => {
+    if(readyState == ReadyState.OPEN){
+      sendMessageWrapper({})
+    }
+  }, [readyState])
+
   return (
     <div>
       <div>The WebSocket is currently {connectionStatus}</div>
@@ -56,7 +63,16 @@ export const WebSocketDemo = () => {
         ?
         <div>
           <ServerManager sendMessage={sendMessageWrapper} lastResponse={viewDataResponse}/>
-          {mainData ? mainData.keys().map((index) => <SourceView key={index} title={index} data={mainData.get(index)} />) : null}
+          {mainData ? mainData.keys().map((index) => 
+            <SourceView 
+              key={index} 
+              source_key={index}
+              sendMessage={sendMessageWrapper}
+              lastResponse={viewDataResponse}
+              title={index} 
+              data={mainData.get(index)} 
+            />
+            ) : null}
         </div>
         :
         <NoConnection url={socketUrl}/>

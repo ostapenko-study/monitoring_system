@@ -1,9 +1,8 @@
 import React, { useState , useRef, useEffect} from "react";
-import ProcessTopView from "./ProcessTopView";
 
-import "../../styles/box.css";
+import "../styles/box.css";
 
-import { getRandomInt } from './../../utils';
+import { getRandomInt } from '../utils';
 
 const ManagerWrapper = ({sendMessage, lastResponse, resultGenerator, title}) => {
   const [isRunning, setIsRunning] = useState(false);
@@ -15,7 +14,7 @@ const ManagerWrapper = ({sendMessage, lastResponse, resultGenerator, title}) => 
   useEffect(() => {
     if (lastResponse && lastResponse.index === indexRef.current) {
       setIsRunning(false)
-      if(lastResponse.isOk){
+      if(lastResponse.isOk || lastResponse.data.isOk){
         setError("")
         setData(lastResponse)
       }else{
@@ -44,7 +43,7 @@ const ManagerWrapper = ({sendMessage, lastResponse, resultGenerator, title}) => 
       </div>
       {!isRunning && (
         error !== "" ? (<div>{error}</div> ) :
-        resultGenerator(data)
+        Object.keys(data).length === 0 ? <div></div> : resultGenerator(data)
       )}
     </div>
   );

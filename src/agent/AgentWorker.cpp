@@ -29,6 +29,7 @@ void AgentWorker::onTic()
     pkg.insert("system", generateSystemStat());
     pkg.insert("users", generateProcessStatByUsers(m_config.users));
     pkg.insert("processes", generateProcessStatByNames(m_config.processes));
+    pkg.insert("config", m_config.toJson());
 
     emit packageCreated(pkg);
 }

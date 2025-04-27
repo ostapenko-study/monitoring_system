@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/tables.css"
+import "../styles/tables.css"
 
 const ProcessTopView = ({ processes }) => {
   return (
