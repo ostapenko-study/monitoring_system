@@ -21,10 +21,9 @@ const SetupDeviceManager = ({ sendMessage, lastResponse, ip }) => {
     });
   };
 
-  const renderContent = (data) => {
+  const renderForm = () => {
 
     return (
-
       <div style={{ margin: "10px" }}>
         {/* <div>
           <label>
@@ -36,7 +35,7 @@ const SetupDeviceManager = ({ sendMessage, lastResponse, ip }) => {
             Використовувати Proxy
           </label>
         </div> */}
-
+    
         <div>
           <label>
             <input
@@ -47,7 +46,7 @@ const SetupDeviceManager = ({ sendMessage, lastResponse, ip }) => {
             Використовувати Agent
           </label>
         </div>
-
+    
         <div style={{ marginLeft: "24px" }}>
           <label>
             Ім'я вузла:
@@ -60,7 +59,13 @@ const SetupDeviceManager = ({ sendMessage, lastResponse, ip }) => {
             />
           </label>
         </div>
+      </div>
+    )
+  };
 
+  const renderContent = (data) => {
+
+    return (
         <div style={{ marginTop: "20px" }}>
           {Object.keys(data).length !== 0 ? (
             <div>{data["isOk"] == true ? "Попередній запит виконано вірно" : data["error"]}</div>
@@ -68,7 +73,6 @@ const SetupDeviceManager = ({ sendMessage, lastResponse, ip }) => {
             <div>Запит (якщо був) повернув пусту відповідь</div>
           )}
         </div>
-      </div>
     )
   };
 
@@ -78,6 +82,7 @@ const SetupDeviceManager = ({ sendMessage, lastResponse, ip }) => {
       lastResponse={lastResponse}
       title="Налаштування вузла"
       resultGenerator={renderContent}
+      formGenerator={renderForm}
     />
   );
 };

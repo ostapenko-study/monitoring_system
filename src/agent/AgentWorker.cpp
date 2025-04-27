@@ -14,6 +14,7 @@ AgentWorker::AgentWorker(QObject *parent)
 
 void AgentWorker::setConfig(AgentConfig config)
 {
+    qDebug() << "configuration setted" << config.toJson();
     m_config = config;
 }
 

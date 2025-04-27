@@ -4,7 +4,7 @@ import "../styles/box.css";
 
 import { getRandomInt } from '../utils';
 
-const ManagerWrapper = ({sendMessage, lastResponse, resultGenerator, title}) => {
+const ManagerWrapper = ({sendMessage, lastResponse, resultGenerator, formGenerator, title}) => {
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState("");
   const [data, setData] = useState({})
@@ -41,6 +41,10 @@ const ManagerWrapper = ({sendMessage, lastResponse, resultGenerator, title}) => 
           {isRunning ? "Виконується команда..." : "Запустити"}
         </button>
       </div>
+      
+      {
+        formGenerator && formGenerator()
+      }
       {!isRunning && (
         error !== "" ? (<div>{error}</div> ) :
         Object.keys(data).length === 0 ? <div></div> : resultGenerator(data)

@@ -13,7 +13,10 @@ AgentConfig AgentConfig::createFromJson(const QJsonObject & obj)
     auto key##arr = obj.value(#key).toArray(); \
         answer.key.reserve(key##arr.size()); \
         foreach (const auto& obj, key##arr) { \
-            answer.key.push_back(obj.toString().toStdString()); \
+            const auto var = obj.toString().toStdString(); \
+            if(!var.empty()){\
+                answer.key.push_back(var); \
+            }\
     } \
 }
     PARSE_ARRAY(users);
@@ -34,6 +37,7 @@ QJsonObject AgentConfig::toJson() const
     for(const auto& var: key){\
         key##arr.append(QString::fromStdString(var)); \
     }\
+    answer.insert(#key, key##arr); \
 }
     INSERT_ARRAY(users);
     INSERT_ARRAY(processes);

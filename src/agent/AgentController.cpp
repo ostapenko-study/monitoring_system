@@ -36,6 +36,8 @@ void AgentController::onClientReceivedMessage(QString text)
 {
     QJsonObject obj = json::parseStr(text);
 
+    qDebug() << "AGENT RECEIVED:" << obj;
+
     auto answer = processMessage(obj);
 
     answer["index"] = obj.value("index");
