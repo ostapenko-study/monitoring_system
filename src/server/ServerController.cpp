@@ -24,7 +24,39 @@ void ServerController::init()
 }
 
 namespace{
+#include <QJsonObject>
+#include <QJsonArray>
 
+// Функція для обробки PID і пам'яті
+QJsonArray processPids(const QJsonArray& pidsArray) {
+    QJsonArray resultPidsArray;
+
+    for (const QJsonValue& pidVal : pidsArray) {
+        QJsonObject pidObj = pidVal.toObject();
+
+        QJsonObject pidInfo;
+        pidInfo["pid"] = pidObj["pid"];
+        pidInfo["ppid"] = pidObj["ppid"];
+        pidInfo["state"] = pidObj["state"];
+        pidInfo["cpu"] = pidObj["cpu"];
+
+        QJsonObject memObj = pidObj["mem"].toObject();
+        QJsonObject memoryInfo;
+        if (memObj.contains("VmPeak")) memoryInfo["peak"] = memObj["VmPeak"];
+        if (memObj.contains("VmSize")) memoryInfo["size"] = memObj["VmSize"];
+        if (memObj.contains("VmSwap")) memoryInfo["swap"] = memObj["VmSwap"];
+        if (memObj.contains("VmData")) memoryInfo["data"] = memObj["VmData"];
+        if (memObj.contains("VmStk"))  memoryInfo["stk"] = memObj["VmStk"];
+        if (memObj.contains("VmExe"))  memoryInfo["exe"] = memObj["VmExe"];
+
+        pidInfo["memory"] = memoryInfo;
+        resultPidsArray.append(pidInfo);
+    }
+
+    return resultPidsArray;
+}
+
+// Головна функція перетворення
 QJsonObject convert(const QJsonObject& obj) {
     QJsonObject system = obj["system"].toObject();
     QJsonObject mem = system["mem"].toObject();
@@ -54,42 +86,38 @@ QJsonObject convert(const QJsonObject& obj) {
     systemObj["memory"] = memory;
     pkg["system"] = systemObj;
 
+    // Обробка процесів
     QJsonArray processesArray;
     for (const QJsonValue& processVal : obj["processes"].toArray()) {
         QJsonObject processObj = processVal.toObject();
         QJsonObject proc;
         proc["name"] = processObj["process"];
 
-        QJsonArray pidsArray;
-        for (const QJsonValue& pidVal : processObj["pids"].toArray()) {
-            QJsonObject pidObj = pidVal.toObject();
-
-            QJsonObject pidInfo;
-            pidInfo["pid"] = pidObj["pid"];
-            pidInfo["ppid"] = pidObj["ppid"];
-            pidInfo["state"] = pidObj["state"];
-            pidInfo["cpu"] = pidObj["cpu"];
-
-            QJsonObject memObj = pidObj["mem"].toObject();
-            QJsonObject memoryInfo;
-            if (memObj.contains("VmPeak")) memoryInfo["peak"] = memObj["VmPeak"];
-            if (memObj.contains("VmSize")) memoryInfo["size"] = memObj["VmSize"];
-            if (memObj.contains("VmSwap")) memoryInfo["swap"] = memObj["VmSwap"];
-            if (memObj.contains("VmData")) memoryInfo["data"] = memObj["VmData"];
-            if (memObj.contains("VmStk"))  memoryInfo["stk"] = memObj["VmStk"];
-            if (memObj.contains("VmExe"))  memoryInfo["exe"] = memObj["VmExe"];
-
-            pidInfo["memory"] = memoryInfo;
-            pidsArray.append(pidInfo);
-        }
-
-        proc["pids"] = pidsArray;
+        // Використовуємо функцію для обробки PIDs
+        proc["pids"] = processPids(processObj["pids"].toArray());
         processesArray.append(proc);
     }
 
     pkg["processes"] = processesArray;
+
+    // Додаємо config і index, як було раніше
     pkg["config"] = obj["config"];
     pkg["index"] = obj["index"];
+
+    // Обробка користувачів
+    QJsonArray usersArray;
+    for (const QJsonValue& userVal : obj["users"].toArray()) {
+        QJsonObject userObj = userVal.toObject();
+        QJsonObject user;
+
+        user["user"] = userObj["user"];
+
+        // Використовуємо функцію для обробки PIDs
+        user["pids"] = processPids(userObj["pids"].toArray());
+        usersArray.append(user);
+    }
+
+    pkg["users"] = usersArray;
 
     return pkg;
 }
