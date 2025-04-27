@@ -17,7 +17,7 @@ const ProcessTopView = ({ processes }) => {
             <th>NI</th>
             <th>VIRT</th>
             <th>RES</th>
-            <th>SHR</th>
+            {/* <th>SHR</th> */}
             <th>Time</th>
           </tr>
         </thead>
@@ -34,7 +34,7 @@ const ProcessTopView = ({ processes }) => {
               <td>{proc.ni}</td>
               <td>{proc.virt}</td>
               <td>{proc.res}</td>
-              <td>{proc.shr}</td>
+              {/* <td>{proc.shr}</td> */}
               <td>{proc.time}</td>
             </tr>
           ))}

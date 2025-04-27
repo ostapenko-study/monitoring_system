@@ -38,6 +38,7 @@ public:
 signals:
     void received(QString message);
 protected:
+    QUrl m_url;
     Role m_role;
     QString m_key;
     QPointer<QWebSocket> m_socket;

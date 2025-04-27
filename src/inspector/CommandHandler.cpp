@@ -33,15 +33,16 @@ QJsonObject wrapWithErrorHandling(Func func, const QJsonObject& data)
 }
 
 
-QString generateSshBackgroundCommand(QString app_name){
-    return "sh -c \'nohup " + app_name + " > /dev/null 2>&1 < /dev/null &\'";
+QString generateSshBackgroundCommand(QString remout_dir, QString app_name){
+    return "sh -c \'cd " + remout_dir + " && nohup " + app_name + " > /dev/null 2>&1 < /dev/null &\'";
 }
 
 
 
 QJsonObject __getTopRequest(const QJsonObject& data)
 {
-    const auto stats = getProcessTopInfos();
+    // const auto stats = getProcessTopInfos();
+    const auto stats = getProcessPsInfos();
     QJsonObject answer;
     answer["top"] = json::containerToJson(stats.begin(), stats.end());
     return json::generateResult(appendIndex(answer, data));
@@ -56,7 +57,8 @@ QJsonObject __getScanNetworkRequest(const QJsonObject& data)
 
 QJsonObject __getTopRequestBySsh(const QJsonObject & data)
 {
-    const auto stats = getProcessTopInfosBySsh(SshCredentials::fromJson(data));
+    // const auto stats = getProcessTopInfosBySsh(SshCredentials::fromJson(data));
+    const auto stats = getProcessPsInfosBySsh(SshCredentials::fromJson(data));
     QJsonObject answer;
     answer["top"] = json::containerToJson(stats.begin(), stats.end());
     return json::generateResult(appendIndex(answer, data));
@@ -126,8 +128,7 @@ QJsonObject setupDeviceBySsh(const QJsonObject& data, int port)
 
     for(const auto& app : apps){
         if(data.value(app).toBool()){
-            qDebug() << generateSshBackgroundCommand(remote_dir + app);
-            run_ssh(ssh_credentials, generateSshBackgroundCommand(remote_dir + "run_" + app + ".sh"));
+            run_ssh(ssh_credentials, generateSshBackgroundCommand(remote_dir, QString("./run_") + app + ".sh"));
         }
     }
 

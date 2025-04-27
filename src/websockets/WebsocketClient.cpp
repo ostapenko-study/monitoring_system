@@ -65,6 +65,7 @@ void WebsocketClient::setUrl(const QUrl &url)
 {
     qInfo() << "try to open socket:" << url;
     m_socket->open(url);
+    m_url = url;
 }
 
 void WebsocketClient::sendMessage(const QString &msg)
@@ -84,6 +85,8 @@ void WebsocketClient::sendMessage(const QString &msg)
     else
     {
         qWarning() << "socket isn't open";
+        qInfo() << "try reopent socket";
+        m_socket->open(m_url);
     }
 }
 

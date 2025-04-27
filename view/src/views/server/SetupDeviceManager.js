@@ -21,52 +21,56 @@ const SetupDeviceManager = ({ sendMessage, lastResponse, ip }) => {
     });
   };
 
-  const renderContent = (data) => (
-    <div style={{ margin: "10px" }}>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={useProxy}
-            onChange={() => setUseProxy(!useProxy)}
-          />{" "}
-          Використовувати Proxy
-        </label>
-      </div>
+  const renderContent = (data) => {
 
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={useAgent}
-            onChange={() => setUseAgent(!useAgent)}
-          />{" "}
-          Використовувати Agent
-        </label>
-      </div>
+    return (
 
-      <div style={{ marginLeft: "24px" }}>
-        <label>
-          Ім'я вузла:
-          <input
-            type="text"
-            value={nodeName}
-            onChange={(e) => setNodeName(e.target.value)}
-            placeholder="Введіть ім'я"
-            style={{ marginLeft: "10px" }}
-          />
-        </label>
-      </div>
+      <div style={{ margin: "10px" }}>
+        {/* <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={useProxy}
+              onChange={() => setUseProxy(!useProxy)}
+            />{" "}
+            Використовувати Proxy
+          </label>
+        </div> */}
 
-      <div style={{ marginTop: "20px" }}>
-        {Object.keys(data).length !== 0 ? (
-          <div>{JSON.stringify(data)}</div>
-        ) : (
-          <div>Запит (якщо був) повернув пусту відповідь</div>
-        )}
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={useAgent}
+              onChange={() => setUseAgent(!useAgent)}
+            />{" "}
+            Використовувати Agent
+          </label>
+        </div>
+
+        <div style={{ marginLeft: "24px" }}>
+          <label>
+            Ім'я вузла:
+            <input
+              type="text"
+              value={nodeName}
+              onChange={(e) => setNodeName(e.target.value)}
+              placeholder="Введіть ім'я"
+              style={{ marginLeft: "10px" }}
+            />
+          </label>
+        </div>
+
+        <div style={{ marginTop: "20px" }}>
+          {Object.keys(data).length !== 0 ? (
+            <div>{data["isOk"] == true ? "Попередній запит виконано вірно" : data["error"]}</div>
+          ) : (
+            <div>Запит (якщо був) повернув пусту відповідь</div>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    )
+  };
 
   return (
     <ManagerWrapper
