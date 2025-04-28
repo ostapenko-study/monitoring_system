@@ -1,6 +1,7 @@
 
 import SystemView from './system/SystemView'
 import AppView from './AppView';
+import UserView from './UserView';
 import ExpandedForm from './ExpandedForm';
 import AgentConfigation from './agent/AgentConfiguration'
 
@@ -16,6 +17,10 @@ export const SourceView = ({sendMessage, lastResponse, source_key, title, data})
         <AppView key={process.name} data={process} totals={totals}/>
     )
 
+    const users_items = data.users.map((user, id) => 
+        <UserView key={user.name} data={user} totals={totals}/>
+    )
+
     return (
         <ExpandedForm title={title}>
             <ExpandedForm title={"Конфігурація"}>
@@ -29,7 +34,12 @@ export const SourceView = ({sendMessage, lastResponse, source_key, title, data})
             <ExpandedForm title={"Система"}>
                 <SystemView data={data.system} totals={totals} />
             </ExpandedForm>
-            {processes_items}
+            <ExpandedForm title={"Користувачі"}>
+                {users_items}
+            </ExpandedForm>
+            <ExpandedForm title={"Процеси"}>
+                {processes_items}
+            </ExpandedForm>
         </ExpandedForm>
     );
 };

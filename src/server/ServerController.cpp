@@ -37,6 +37,7 @@ QJsonArray processPids(const QJsonArray& pidsArray) {
         QJsonObject pidInfo;
         pidInfo["pid"] = pidObj["pid"];
         pidInfo["ppid"] = pidObj["ppid"];
+        pidInfo["name"] = pidObj["name"];
         pidInfo["state"] = pidObj["state"];
         pidInfo["cpu"] = pidObj["cpu"];
 

@@ -4,7 +4,7 @@ import CpuView from '../CpuView'
 
 export const ProcessView = ({data, totals}) => {
 
-  const title_str = `PID: ${data.pid} ; PPID: ${data.ppid};`;
+  const title_str = `PID: ${data.pid} ; PPID: ${data.ppid}; name: ${data.name}`;
 
   return (
     <ExpandedForm title={title_str}>
